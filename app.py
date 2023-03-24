@@ -19,15 +19,15 @@ w3 = Web3(Web3.HTTPProvider(os.getenv("WEB3_PROVIDER_URI")))
 def load_contract():
 
     # Load the contract ABI
-    with open(Path('./contracts/compiled/art_token_abi.json')) as f:
-        art_token_abi = json.load(f)
+    with open(Path('./Smart_Contracts/Compiled/pet_token_abi.json')) as f:
+        pet_token_abi = json.load(f)
 
     contract_address = os.getenv("SMART_CONTRACT_ADDRESS")
 
     # Load the contract
     contract = w3.eth.contract(
         address=contract_address,
-        abi=art_token_abi
+        abi=pet_token_abi
     )
 
     return contract
@@ -49,7 +49,7 @@ artwork_uri = st.text_input("The URI to the artwork")
 if st.button("Register Artwork"):
 
     # Use the contract to send a transaction to the registerArtwork function
-    tx_hash = contract.functions.registerArtwork(
+    tx_hash = contract.functions.registerPet(
         address,
         artwork_uri
     ).transact({'from': address, 'gas': 1000000})
