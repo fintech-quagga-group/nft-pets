@@ -1,3 +1,4 @@
+
 Aardvark				
 Aardwolf				
 Abyssinian				
@@ -97,7 +98,7 @@ Anglerfish
 Angora Ferret				
 Angora Goat				
 Anhinga				
-Anna’s Hummingbird				
+Annas Hummingbird				
 Anole Lizard				
 Anomalocaris				
 Ant				
@@ -193,7 +194,7 @@ Bactrian Camel
 Badger				
 Bagworm Moth				
 Baiji				
-Baird’s Rat Snake				
+Bairds Rat Snake				
 Bald Eagle				
 Baleen Whale				
 Balinese				
@@ -211,7 +212,7 @@ Bandicoot
 Banjo Catfish				
 Barb				
 Barbet				
-Barbut’s Cuckoo Bumblebee				
+Barbuts Cuckoo Bumblebee				
 Barinasuchus				
 Bark Beetle				
 Bark Scorpion				
@@ -289,7 +290,7 @@ Bichir
 Bichon Frise				
 Bichpoo				
 Biewer Terrier				
-Bigfin Reef Squid 				
+Bigfin Reef Squid			
 Bighorn Sheep				
 Bilby				
 Binturong				
@@ -364,7 +365,7 @@ Bluetick Coonhound
 Boas				
 Bobcat				
 Bobolink				
-Boelen’s python				
+Boelens python				
 Boer Goat				
 Boerboel				
 Boggle				
@@ -415,7 +416,7 @@ Braque Francais
 Brazilian Black Tarantula				
 Brazilian Terrier				
 Brazilian Treehopper				
-Bredl’s Python				
+Bredls Python				
 Briard				
 British Timber				
 Brittany				
@@ -542,7 +543,7 @@ Chicken Snake
 Chigger				
 Chihuahua				
 Chihuahua Mix				
-Children’s python				
+Childrens python				
 Chilean Rose Tarantula				
 Chimaera				
 Chimpanzee				
@@ -577,7 +578,7 @@ Cinereous Vulture
 Cinnamon Ball Python				
 Cinnamon Bear				
 Cinnamon Ferret				
-Clark’s Grebe				
+Clarks Grebe				
 Clearnose Skate				
 Click Beetle				
 Clock Spider				
@@ -602,7 +603,7 @@ Codfish
 Codling Moth				
 Coelacanth				
 Collared Peccary				
-Collett’s Snake				
+Colletts Snake				
 Collie				
 Colossal Squid				
 Comb Jellyfish				
@@ -629,7 +630,7 @@ Conger Eel
 Congo Snake				
 Conure				
 Cookiecutter Shark				
-Cooper’s Hawk				
+Coopers Hawk				
 Copperhead				
 Coral				
 Coral Snake				
@@ -643,7 +644,7 @@ Corn Rex Cat (Cornish Rex)
 Corn Snake				
 Cory Catfish				
 Coryphodon				
-Costa’s Hummingbird				
+Costas Hummingbird				
 Coton de Tulear				
 Cotton-top Tamarin				
 Cottonmouth				
@@ -695,13 +696,13 @@ Dapple Dachshund
 Dark-Eyed Junco				
 Dark-Eyed Junco				
 Darkling Beetle				
-Darwin’s fox				
-Darwin’s Frog				
+Darwins fox				
+Darwins Frog				
 Daug				
-De Brazza’s Monkey				
-De Kay’s Brown Snake				
+De Brazzas Monkey				
+De Kays Brown Snake				
 Death Adder				
-Death’s Head Cockroach				
+Deaths Head Cockroach				
 Deathwatch Beetle				
 Decorator Crab				
 Deer				
@@ -717,7 +718,7 @@ Desert Tortoise
 Desert Wolf				
 Desmostylus				
 Deutsche Bracke				
-Devil’s Coach Horse Beetle				
+Devils Coach Horse Beetle				
 Devon Rex				
 Dhole				
 Diamond Python				
@@ -769,7 +770,7 @@ Drum Fish
 Dubia Cockroach				
 Duck				
 Dugong				
-Dumeril’s Boa				
+Dumerils Boa				
 Dung Beetle				
 Dungeness Crab				
 Dunker				
@@ -896,7 +897,7 @@ European Wildcat
 Eurypterus				
 Evening Bat				
 Evening Grosbeak				
-Executioner Wasp 				
+Executioner Wasp				
 Eyelash Viper				
 Fainting Goat				
 Fairy-Wren				
@@ -1145,13 +1146,13 @@ Grouse
 Guadalupe Bass				
 Guinea Fowl				
 Guinea Pig				
-Gulper Catfish 				
-Gulper Eel 				
+Gulper Catfish			
+Gulper Eel		
 Guppy				
 Gypsy Cuckoo Bumblebee				
 Gypsy Moth				
 Gypsy Moth Caterpillar				
-Haast’s Eagle				
+Haasts Eagle				
 Habu Snake				
 Haddock				
 Hagfish				
@@ -1301,7 +1302,7 @@ Jackabee
 Jackal				
 Jackdaw				
 Jackrabbit				
-Jackson’s Chameleon				
+Jacksons Chameleon				
 Jagdterrier				
 Jaguar				
 Jaguarundi Cat				
@@ -1320,7 +1321,7 @@ Javan Rhinoceros
 Javanese				
 Jellyfish				
 Jerboa				
-Jewel Beetle 				
+Jewel Beetle				
 John Dory				
 Jonah Crab				
 Joro Spider				
@@ -1337,7 +1338,7 @@ Kangaroo
 Kangaroo Mouse				
 Kangaroo Rat				
 Katydid				
-Kaua’i ‘_‘_				
+Kauai 			
 Kea				
 Keagle				
 Keel-Billed Toucan				
@@ -1376,7 +1377,7 @@ King Vulture
 Kingfisher				
 Kingklip				
 Kinkajou				
-Kirtland’s snake				
+Kirtlands snake				
 Kishu				
 Kissing Bugs				
 Kissing Gourami				
@@ -1406,7 +1407,7 @@ Kudzu Bug
 Kuvasz				
 Labahoula				
 Labmaraner				
-Labout’s Fairy Wrasse				
+Labouts Fairy Wrasse				
 Labrabull				
 Labradane				
 Labradoodle				
@@ -1440,7 +1441,7 @@ Leafcutter Bee
 Leatherback Sea Turtle				
 Leech				
 Leedsichthys				
-Leichhardt’s Grasshopper				
+Leichhardts Grasshopper				
 Lemming				
 Lemon Blast Ball Python				
 Lemon Cuckoo Bumblebee				
@@ -1464,7 +1465,7 @@ Limpet
 Lineback Cattle				
 Linnet				
 Lion				
-Lion’s Mane Jellyfish				
+Lions Mane Jellyfish				
 Lionfish				
 Liopleurodon				
 Little Brown Bat				
@@ -1499,7 +1500,7 @@ Lystrosaurus
 Macaque				
 Macaroni Penguin				
 Macaw				
-MacGillivray’s Warbler				
+MacGillivrays Warbler				
 Machaeroides				
 Mackenzie Valley Wolf				
 Macrauchenia				
@@ -1743,7 +1744,7 @@ Opossum
 Oranda Goldfish				
 Orange Baboon Tarantula				
 Orange Dream Ball Python				
-Orange Roughy 				
+Orange Roughy			
 Orange Spider				
 Orange Tanager (Orange-Headed Tanager)				
 Orange-Crowned Warbler				
@@ -1830,13 +1831,13 @@ Peppermint Angelfish
 Perch Fish				
 Pere Davids Deer				
 Peregrine Falcon				
-Peringuey’s Adder				
+Peringueys Adder				
 Perro De Presa Canario				
 Persian				
 Peruvian Guinea Pig				
 Peruvian Inca Orchid				
-Pesquet’s Parrot (Dracula Parrot)				
-Petit Basset Griffon Vendéen				
+Pesquets Parrot (Dracula Parrot)				
+Petit Basset Griffon Venden				
 Petite Goldendoodle				
 Pharaoh Hound				
 Pheasant				
@@ -2076,7 +2077,7 @@ Ruby-Crowned Kinglet
 Ruby-Throated Hummingbird				
 Ruddy Turnstone				
 Rufous Hummingbird				
-Russel’s Viper				
+Russels Viper				
 Russell Terrier				
 Russian Bear Dog				
 Russian Blue				
@@ -2321,7 +2322,7 @@ Star-nosed mole
 Starfish				
 Stargazer Fish				
 Steelhead Salmon				
-Steller’s Sea Cow				
+Stellers Sea Cow				
 Stick Insect				
 Stiletto Snake				
 Stingray				
@@ -2356,7 +2357,7 @@ Superworm
 Surgeonfish				
 Sussex Chicken				
 Swai Fish				
-Swainson’s Hawk				
+Swainsons Hawk				
 Swallow				
 Swallowtail Butterfly				
 Swallowtail Caterpillar				
@@ -2497,7 +2498,7 @@ Uguisu
 Uinta Ground Squirrel				
 Uintatherium				
 Umbrellabird				
-Unau (Linnaeus’s Two-Toed Sloth)				
+Unau (Linnaeus Two-Toed Sloth)				
 Underwing Moth				
 Upland Sandpiper				
 Ural owl				
@@ -2508,7 +2509,7 @@ Urutu Snake
 Utonagan				
 Valley Bulldog				
 Vampire Bat				
-Vampire Crab 				
+Vampire Crab				
 Vampire Squid				
 Vaquita				
 Vegavis				
@@ -2517,7 +2518,7 @@ Venus Flytrap
 Vermilion Flycatcher				
 Vervet Monkey				
 Vestal Cuckoo Bumblebee				
-Vicuña				
+Vicua				
 Vine Snake				
 Vinegaroon				
 Viper				
@@ -2584,7 +2585,7 @@ White German Shepherd
 White Marlin				
 White Rhinoceros				
 White Shark				
-White Sturgeon 				
+White Sturgeon			
 White Tiger				
 White-Crowned Sparrow				
 White-Eyed Vireo				
@@ -2635,7 +2636,7 @@ Wrought Iron Butterflyfish
 Wryneck				
 Wyoming Toad				
 X-Ray Tetra				
-Xeme (Sabine’s Gull)				
+Xeme (Sabines Gull)				
 Xenacanthus				
 Xenoceratops				
 Xenoposeidon				
@@ -2668,7 +2669,7 @@ Yellow-Eyed Penguin
 Yellow-faced Bee				
 Yellowfin Tuna				
 Yellowhammer				
-Yellowish Cuckoo Bumblebee (formerly Fernald’s Cuckoo Bumblebee)				
+Yellowish Cuckoo Bumblebee (formerly Fernalds Cuckoo Bumblebee)				
 Yellowjacket (Yellow Jacket)				
 Yellowtail Snapper				
 Yellowthroat				
