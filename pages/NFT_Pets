@@ -1,0 +1,29 @@
+import os
+import json
+from web3 import Web3
+from pathlib import Path
+from dotenv import load_dotenv
+import streamlit as st
+
+load_dotenv()
+
+w3 = Web3(Web3.HTTPProvider(os.getenv("WEB3_PROVIDER_URI")))
+
+################################################################################
+# Contract Helper function:
+################################################################################
+@st.cache_resource
+def load_contract():
+    with open(Path('./Smart_Contracts/Compiled/pet_token_abi.json')) as f:
+        pet_token_abi = json.load(f)
+
+    contract_address = os.getenv("SMART_CONTRACT_ADDRESS")
+
+    contract = w3.eth.contract(
+        address=contract_address,
+        abi=pet_token_abi
+    )
+
+    return contract
+
+contract = load_contract()
