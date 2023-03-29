@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.5.5;
 
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v2.5.0/contracts/token/ERC721/ERC721Full.sol";
 
@@ -30,7 +30,7 @@ contract PetToken is ERC721Full {
     }
 
     function changePrice(uint256 tokenId, uint256 price) public {
-        require(_isApprovedOrOwner(msg.sender, tokenId), "caller is not owner nor approved");
+        require(_isApprovedOrOwner(msg.sender, tokenId), "caller is not owner or approved");
 
         pets[tokenId].price = price;
 
@@ -53,6 +53,26 @@ contract PetToken is ERC721Full {
         oldOwner.transfer(msg.value);
 
         emit PetSold(tokenId, oldOwner, newOwner, price);
+    }
+
+    function getPetsForSale() public view returns (uint256[] memory) {
+        uint256 count = 0;
+        for (uint256 i = 0; i < totalSupply(); i++) {
+            if (ownerOf(i) != address(0) && pets[i].price > 0) {
+                count++;
+            }
+        }
+
+        uint256[] memory result = new uint256[](count);
+        uint256 index = 0;
+        for (uint256 i = 0; i < totalSupply(); i++) {
+            if (ownerOf(i) != address(0) && pets[i].price > 0) {
+                result[index] = i;
+                index++;
+            }
+        }
+
+        return result;
     }
 }
 

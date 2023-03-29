@@ -12,7 +12,7 @@ w3 = Web3(Web3.HTTPProvider(os.getenv("WEB3_PROVIDER_URI")))
 ################################################################################
 # Contract Helper function:
 ################################################################################
-@st.cache(allow_output_mutation=True)
+@st.cache_resource
 def load_contract():
     with open(Path('./Smart_Contracts/Compiled/pet_token_abi.json')) as f:
         pet_token_abi = json.load(f)
@@ -73,3 +73,16 @@ if st.button("Display"):
 
     st.write(f"The NFT Pet URI is {token_uri}")
     st.image(token_uri)
+
+st.markdown("---")
+
+################################################################################
+# View all tokens available for sale
+################################################################################
+
+st.markdown('## NFT Pet Marketplace')
+
+pets_for_sale = contract.functions.getPetsForSale().call()
+
+for pet in pets_for_sale:
+    st.image(contract.functions.tokenURI(pet).call())
