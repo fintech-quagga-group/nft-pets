@@ -28,9 +28,22 @@ def load_contract():
 
 contract = load_contract()
 
+
+################################################################################
+# Drowdown Menu for Pet Generation
+################################################################################
+
+st.title("Pet Selector")
+
+with open("Resources/Animals.txt") as file:
+    all_animals = file.read().splitlines()
+
+animal = st.selectbox('Select an animal', all_animals) 
+
 ################################################################################
 # Register new NFT Pet
 ################################################################################
+
 st.title("Register new NFT Pet")
 accounts = w3.eth.accounts
 
