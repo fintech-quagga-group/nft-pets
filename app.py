@@ -1,8 +1,9 @@
 import os
 import json
-from web3 import Web3
+from web3 import Web3, Account
 from pathlib import Path
 from dotenv import load_dotenv
+
 import streamlit as st
 
 load_dotenv()
@@ -28,6 +29,79 @@ def load_contract():
 
 contract = load_contract()
 
+################################################################################
+# login sidebar
+################################################################################
+def login_form():
+    # define session variables to manage logged in state
+    session = st.session_state
+    if not "logged_in" in session:
+        session.logged_in = False
+    if not "form_hidden" in session:
+        session.form_hidden = False
+    if not "username" in session:
+        session.username = ""
+    if not "password" in session:
+        session.password = ""
+    if not "login_dummy" in session:
+        session.login_dummy = False
+    if not "logout_dummy" in session:
+        session.logout_dummy = False
+
+    def login():
+        session = st.session_state
+
+        if session.username in w3.eth.accounts:
+            session.logged_in = True
+
+            # change dummy variable to trigger rerun
+            session.login_dummy = not session.login_dummy
+
+            account = Account.privateKeyToAccount(os.getenv('PRIVATE_KEY'))
+
+            # verify that the stored private key is correct for the provided address
+            if Web3.toChecksumAddress(session.username) == account.address:
+                st.sidebar.success(f'Logged into account with address: {session.username}')
+                w3.eth.default_account = session.username
+
+                # call the contract login function to login the user
+                contract.functions.login().transact({'from': session.username, 'gas': 1000000})
+
+                return True
+            else:
+                st.sidebar.error(f'Private key is not correct for address: {session.username}')
+                return False
+
+        return False
+
+    def logout():
+        session = st.session_state
+        session.logged_in = False
+        session.form_hidden = False
+        session.logout_dummy = not session.logout_dummy
+
+        contract.functions.logout().transact({'from': session.username, 'gas': 1000000})
+        w3.eth.default_account = None
+
+    st.sidebar.title('Login')
+
+    if not session.logged_in:
+        if st.sidebar.button('Login', key='login', on_click=login):
+            if login():
+                st.sidebar.success(f'Logged in as {session.username}')
+                session.form_hidden = True
+            else:
+                st.sidebar.error('Incorrect username or password')
+
+        if not session.form_hidden:
+            session.username = st.sidebar.text_input('Account ID', value=session.username)
+
+    if session.logged_in:
+        st.sidebar.write('Logged in')
+        if st.sidebar.button('Logout', key='logout', on_click=logout):
+            logout()
+
+login_form()
 
 ################################################################################
 # Drowdown Menu for Pet Generation
