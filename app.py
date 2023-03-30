@@ -1,6 +1,6 @@
 import os
 import json
-from web3 import Web3
+from web3 import Web3, exceptions
 from eth_account import Account
 from eth_account.messages import encode_defunct
 from pathlib import Path
@@ -91,6 +91,9 @@ def login_form():
         session.logged_in = False
         session.form_hidden = False
         session.logout_dummy = not session.logout_dummy
+
+        contract.functions.logout().transact({'from': session.username, 'gas': 1000000})
+        w3.eth.default_account = None
 
     st.sidebar.title('Login')
 
