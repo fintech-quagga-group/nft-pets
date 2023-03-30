@@ -40,7 +40,7 @@ w3.eth.default_account = w3.eth.accounts[5]  # replace with the address of your 
 st.write(w3.eth.accounts[5])
 
 # Sign the message with the account private key
-private_key = "0x73fb6116ac8818aad7e761ec77940ccc5a335c9dc5474282420e412b16092897"  # replace with the private key of the Ganache account that you want to log in
+private_key = os.get_env("PRIVATE_KEY")
 account = Account.privateKeyToAccount(private_key)
 message = encode_defunct(text='login')
 signature = account.sign_message(message)
@@ -57,69 +57,19 @@ st.write(signer_address)
 tx_hash = contract.functions.login(signature.signature).transact({'from': w3.eth.accounts[2], 'gas': 1000000})
 tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
 
-
 st.write(tx_receipt)
 
-
-"""
-def test():
-    def login():
-        session = st.session_state
-        session.logged_in = True
-
-    def logout():
-        session = st.session_state
-        session.logged_in = False
-        session.form_hidden = False
-
-    session = st.session_state
-    if not "logged_in" in session:
-        session.logged_in = False
-    if not "form_hidden" in session:
-        session.form_hidden = False
-    if not "username" in session:
-        session.username = ""
-    if not "password" in session:
-        session.password = ""
-
-    st.sidebar.title("Login")
-
-    if not session.logged_in:
-        if st.sidebar.button("Login"):
-
-            if session.username == "admin" and session.password == "1234":
-                login()
-                st.sidebar.success("Logged in as {}".format(session.username))
-                session.form_hidden = True  # Hide the form after attempting to log in
-            else:
-                st.sidebar.error("Incorrect username or password")
-
-        if not session.form_hidden:
-            session.username = st.sidebar.text_input("Username", value=session.username)
-            session.password = st.sidebar.text_input("Password", type="password", value=session.password)
-    else:
-        st.sidebar.write("Logged in")
-        logout_button = st.sidebar.button("Logout")
-        if logout_button:
-            logout()
-
-test()
-"""
-
-def test():
+def login_form():
     def login():
         session = st.session_state
         session.logged_in = True
         session.login_dummy = not session.login_dummy  # Change dummy variable to trigger rerun
-
-
 
     def logout():
         session = st.session_state
         session.logged_in = False
         session.form_hidden = False
         session.logout_dummy = not session.logout_dummy  # Change dummy variable to trigger rerun
-
 
     session = st.session_state
     if not "logged_in" in session:
@@ -156,8 +106,7 @@ def test():
         if st.sidebar.button("Logout", key="logout", on_click=logout):
             logout()
 
-test()
-
+login_form()
 
 ################################################################################
 # Drowdown Menu for Pet Generation
