@@ -85,10 +85,9 @@ def test():
             if session.username == "admin" and session.password == "1234":
                 login()
                 st.sidebar.success("Logged in as {}".format(session.username))
+                st.session_state.form_hidden = True  # Hide the form after attempting to log in
             else:
                 st.sidebar.error("Incorrect username or password")
-
-            session.form_hidden = True  # Hide the form after attempting to log in
 
         if not session.form_hidden:
             session.username = st.sidebar.text_input("Username", value=session.username)
@@ -96,6 +95,12 @@ def test():
 
     if session.logged_in:
         st.sidebar.write("Logged in")
+        st.sidebar.button("Logout", on_click=logout)
+
+def logout():
+    session = st.session_state
+    session.logged_in = False
+    session.form_hidden = False
 
 test()
 
