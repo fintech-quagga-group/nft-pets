@@ -1,8 +1,11 @@
 import os
 import json
 from web3 import Web3
+from eth_account import Account
+from eth_account.messages import encode_defunct
 from pathlib import Path
 from dotenv import load_dotenv
+
 import streamlit as st
 
 load_dotenv()
@@ -28,6 +31,59 @@ def load_contract():
 
 contract = load_contract()
 
+################################################################################
+# login sidebar
+################################################################################
+
+w3.eth.default_account = w3.eth.accounts[5]  # replace with the address of your account
+
+st.write(w3.eth.accounts[5])
+
+# Sign the message with the account private key
+private_key = "0x73fb6116ac8818aad7e761ec77940ccc5a335c9dc5474282420e412b16092897"  # replace with the private key of the Ganache account that you want to log in
+account = Account.privateKeyToAccount(private_key)
+message = encode_defunct(text='login')
+signature = account.sign_message(message)
+
+# extract the v, r, s values from the signature
+v, r, s = signature.v, signature.r, signature.s
+
+# get the address that signed the message
+signer_address = Account.recover_message(message, vrs=(v, r, s))
+
+st.write(signer_address)
+
+# Call the login function to log in a user
+tx_hash = contract.functions.login(signature.signature).transact({'from': w3.eth.accounts[2], 'gas': 1000000})
+tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
+
+
+st.write(tx_receipt)
+
+
+
+def test():
+    def login():
+        session = st.session_state
+        session.logged_in = True
+
+    session = st.session_state
+    if not hasattr(session, "logged_in"):
+        session.logged_in = False
+
+    st.sidebar.title("Login")
+
+    if not session.logged_in:
+        username = st.sidebar.text_input("Username")
+
+        if st.sidebar.button("Login"):
+            # You can add authentication logic here to check the credentials
+            login()
+            st.sidebar.success("Logged in as {}".format(username))
+    else:
+        st.sidebar.write("Logged in")
+
+test()
 
 ################################################################################
 # Drowdown Menu for Pet Generation

@@ -53,6 +53,29 @@
 		"constant": false,
 		"inputs": [
 			{
+				"name": "_signature",
+				"type": "bytes"
+			}
+		],
+		"name": "login",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "logout",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
 				"name": "name",
 				"type": "string"
 			},
@@ -243,6 +266,30 @@
 			}
 		],
 		"name": "PetSold",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "user",
+				"type": "address"
+			}
+		],
+		"name": "UserLoggedIn",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "user",
+				"type": "address"
+			}
+		],
+		"name": "UserLoggedOut",
 		"type": "event"
 	},
 	{
