@@ -172,7 +172,7 @@ session = st.session_state
 
 st.write(session.username)
 
-owned_pets = contract.functions.getOwnedTokens(session.username).call()
+owned_pets = contract.functions.getOwnedPets(session.username).call()
 
 for pet in owned_pets:
     st.image(contract.functions.tokenURI(pet).call())
