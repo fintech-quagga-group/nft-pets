@@ -323,6 +323,15 @@
 	},
 	{
 		"constant": false,
+		"inputs": [],
+		"name": "login",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
 		"inputs": [
 			{
 				"name": "tokenId",
@@ -432,20 +441,6 @@
 		],
 		"payable": false,
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_signature",
-				"type": "bytes"
-			}
-		],
-		"name": "login",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{

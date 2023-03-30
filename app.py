@@ -1,8 +1,6 @@
 import os
 import json
-from web3 import Web3, exceptions
-from eth_account import Account
-from eth_account.messages import encode_defunct
+from web3 import Web3, Account
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -59,30 +57,20 @@ def login_form():
             # change dummy variable to trigger rerun
             session.login_dummy = not session.login_dummy
 
-            w3.eth.default_account = session.username
+            account = Account.privateKeyToAccount(os.getenv('PRIVATE_KEY'))
 
-            # Sign the message with the account private key
-            private_key = os.getenv('PRIVATE_KEY')
-            account = Account.privateKeyToAccount(private_key)
-            message = encode_defunct(text='login')
-            signature = account.sign_message(message)
+            # verify that the stored private key is correct for the provided address
+            if Web3.toChecksumAddress(session.username) == account.address:
+                st.sidebar.success(f'Logged into account with address: {session.username}')
+                w3.eth.default_account = session.username
 
-            # extract the v, r, s values from the signature
-            v, r, s = signature.v, signature.r, signature.s
+                # call the contract login function to login the user
+                contract.functions.login().transact({'from': session.username, 'gas': 1000000})
 
-            # get the address that signed the message
-            signer_address = Account.recover_message(message, vrs=(v, r, s))
-
-            st.write(f'signer address: {signer_address}')
-            st.write(f'session.username: {session.username}')
-
-            # Call the login function to log in a user
-            tx_hash = contract.functions.login(signature.signature).transact({'from': session.username, 'gas': 1000000})
-            tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
-
-            st.write(tx_receipt)
-
-            return True
+                return True
+            else:
+                st.sidebar.error(f'Private key is not correct for address: {session.username}')
+                return False
 
         return False
 
@@ -103,7 +91,7 @@ def login_form():
                 st.sidebar.success(f'Logged in as {session.username}')
                 session.form_hidden = True
             else:
-                st.sidebar.error("Incorrect username or password")
+                st.sidebar.error('Incorrect username or password')
 
         if not session.form_hidden:
             session.username = st.sidebar.text_input('Account ID', value=session.username)
