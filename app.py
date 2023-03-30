@@ -164,6 +164,20 @@ if st.button("Display"):
 st.markdown("---")
 
 ################################################################################
+# View tokens that you own
+################################################################################
+st.markdown('## Your NFT Pets')
+
+session = st.session_state
+
+st.write(session.username)
+
+owned_pets = contract.functions.getOwnedPets(session.username).call()
+
+for pet in owned_pets:
+    st.image(contract.functions.tokenURI(pet).call())
+
+################################################################################
 # View all tokens available for sale
 ################################################################################
 
