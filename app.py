@@ -61,11 +61,16 @@ tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
 st.write(tx_receipt)
 
 
-
+"""
 def test():
     def login():
         session = st.session_state
         session.logged_in = True
+
+    def logout():
+        session = st.session_state
+        session.logged_in = False
+        session.form_hidden = False
 
     session = st.session_state
     if not "logged_in" in session:
@@ -85,7 +90,60 @@ def test():
             if session.username == "admin" and session.password == "1234":
                 login()
                 st.sidebar.success("Logged in as {}".format(session.username))
-                st.session_state.form_hidden = True  # Hide the form after attempting to log in
+                session.form_hidden = True  # Hide the form after attempting to log in
+            else:
+                st.sidebar.error("Incorrect username or password")
+
+        if not session.form_hidden:
+            session.username = st.sidebar.text_input("Username", value=session.username)
+            session.password = st.sidebar.text_input("Password", type="password", value=session.password)
+    else:
+        st.sidebar.write("Logged in")
+        logout_button = st.sidebar.button("Logout")
+        if logout_button:
+            logout()
+
+test()
+"""
+
+def test():
+    def login():
+        session = st.session_state
+        session.logged_in = True
+        session.login_dummy = not session.login_dummy  # Change dummy variable to trigger rerun
+
+
+
+    def logout():
+        session = st.session_state
+        session.logged_in = False
+        session.form_hidden = False
+        session.logout_dummy = not session.logout_dummy  # Change dummy variable to trigger rerun
+
+
+    session = st.session_state
+    if not "logged_in" in session:
+        session.logged_in = False
+    if not "form_hidden" in session:
+        session.form_hidden = False
+    if not "username" in session:
+        session.username = ""
+    if not "password" in session:
+        session.password = ""
+    if not "login_dummy" in session:
+        session.login_dummy = False
+    if not "logout_dummy" in session:
+        session.logout_dummy = False
+
+    st.sidebar.title("Login")
+
+    if not session.logged_in:
+        if st.sidebar.button("Login", key="login", on_click=login):
+
+            if session.username == "admin" and session.password == "1234":
+                login()
+                st.sidebar.success("Logged in as {}".format(session.username))
+                session.form_hidden = True  # Hide the form after attempting to log in
             else:
                 st.sidebar.error("Incorrect username or password")
 
@@ -95,14 +153,11 @@ def test():
 
     if session.logged_in:
         st.sidebar.write("Logged in")
-        st.sidebar.button("Logout", on_click=logout)
-
-def logout():
-    session = st.session_state
-    session.logged_in = False
-    session.form_hidden = False
+        if st.sidebar.button("Logout", key="logout", on_click=logout):
+            logout()
 
 test()
+
 
 ################################################################################
 # Drowdown Menu for Pet Generation
