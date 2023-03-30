@@ -6,6 +6,7 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v2.5
 contract PetToken is ERC721Full {
     constructor() public ERC721Full("PetToken", "PET") {}
 
+    // define struct for a Pet token, and a mapping to have all minted pets
     struct Pet {
         string name;
         string ownerName;
@@ -14,10 +15,12 @@ contract PetToken is ERC721Full {
 
     mapping (uint256 => Pet) public pets;
 
+    // events to track minting a pet, changing the price of a pet, and the sale of a pet
     event PetRegistered(uint256 tokenId, string name, string ownerName, uint256 price);
     event PetPriceChanged(uint256 tokenId, uint256 price);
     event PetSold(uint256 tokenId, address oldOwner, address newOwner, uint256 price);
 
+    // function similar to ArtToken registerArtwork; emits PetRegistered event
     function registerPet(string memory name, string memory ownerName, uint256 price, string memory tokenURI) public returns (uint256) {
         uint256 tokenId = totalSupply();
         _mint(msg.sender, tokenId);
@@ -39,16 +42,18 @@ contract PetToken is ERC721Full {
     }
 
     function buyPet(uint256 tokenId) public payable {
+        // caputure previous owner and new owner to complete ERC721 _transferFrom() call
         address payable oldOwner = address(uint160(ownerOf(tokenId)));
         address payable newOwner = msg.sender;
         uint256 price = pets[tokenId].price;
 
-        require(oldOwner != address(0), "token does not exist");
-        require(oldOwner != newOwner, "you already own this token");
-        require(msg.value == price, "incorrect value sent");
+        require(oldOwner != address(0), "Token does not exist");
+        require(oldOwner != newOwner, "You already own this token");
+        require(msg.value == price, "Incorrect value sent");
 
         _transferFrom(oldOwner, newOwner, tokenId);
 
+        // change owner name within Pet struct
         pets[tokenId].ownerName = ERC721Metadata(address(this)).name();
 
         oldOwner.transfer(msg.value);
@@ -57,6 +62,7 @@ contract PetToken is ERC721Full {
     }
 
     function getPetsForSale() public view returns (uint256[] memory) {
+        // count how many pets of all the minted pets are up for sale 
         uint256 count = 0;
         for (uint256 i = 0; i < totalSupply(); i++) {
             if (ownerOf(i) != address(0) && pets[i].price > 0) {
@@ -66,6 +72,8 @@ contract PetToken is ERC721Full {
 
         uint256[] memory result = new uint256[](count);
         uint256 index = 0;
+
+        // loop through buyable pets and return array of all the tokenIds
         for (uint256 i = 0; i < totalSupply(); i++) {
             if (ownerOf(i) != address(0) && pets[i].price > 0) {
                 result[index] = i;
@@ -76,38 +84,42 @@ contract PetToken is ERC721Full {
         return result;
     }
 
+    // uses balanceOf() to loop through and return all of the given address' pets
+    function getOwnedPets(address owner) public view returns (uint256[] memory) {
+        uint256 tokenCount = balanceOf(owner);
+        uint256[] memory tokenIds = new uint256[](tokenCount);
+
+        for (uint256 i = 0; i < tokenCount; i++) {
+            tokenIds[i] = tokenOfOwnerByIndex(owner, i);
+        }
+
+        return tokenIds;
+    }
+
+    // mapping to hold currently logged in users
     mapping (address => bool) private loggedInUsers;
 
-    function login(bytes memory _signature) public {
-        // Get the address associated with the public key that signed the message
-        address signer = ECDSA.recover(keccak256(abi.encodePacked(msg.sender)), _signature);
-        
-        // Check if the signer is the same as the sender
-        require(signer == msg.sender, "Invalid signature");
+    // events to be sent on log in and log out
+    event UserLoggedIn(address indexed user);
+    event UserLoggedOut(address indexed user);
 
-        // Check if the user is already logged in
+    function login() public {
         require(!loggedInUsers[msg.sender], "User is already logged in");
 
-        // Mark user as logged in
+        // mark user as logged in
         loggedInUsers[msg.sender] = true;
 
-        // Emit an event to indicate that the user has logged in
         emit UserLoggedIn(msg.sender);
     }
 
     function logout() public {
-        // Check if the user is already logged out
         require(loggedInUsers[msg.sender], "User is already logged out");
 
-        // Mark user as logged out
+        // mark user as logged out
         loggedInUsers[msg.sender] = false;
 
-        // Emit an event to indicate that the user has logged out
         emit UserLoggedOut(msg.sender);
     }
-
-    event UserLoggedIn(address indexed user);
-    event UserLoggedOut(address indexed user);
 }
 
 
