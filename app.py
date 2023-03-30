@@ -34,43 +34,8 @@ contract = load_contract()
 ################################################################################
 # login sidebar
 ################################################################################
-
-w3.eth.default_account = w3.eth.accounts[5]  # replace with the address of your account
-
-st.write(w3.eth.accounts[5])
-
-# Sign the message with the account private key
-private_key = os.get_env("PRIVATE_KEY")
-account = Account.privateKeyToAccount(private_key)
-message = encode_defunct(text='login')
-signature = account.sign_message(message)
-
-# extract the v, r, s values from the signature
-v, r, s = signature.v, signature.r, signature.s
-
-# get the address that signed the message
-signer_address = Account.recover_message(message, vrs=(v, r, s))
-
-st.write(signer_address)
-
-# Call the login function to log in a user
-tx_hash = contract.functions.login(signature.signature).transact({'from': w3.eth.accounts[2], 'gas': 1000000})
-tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
-
-st.write(tx_receipt)
-
 def login_form():
-    def login():
-        session = st.session_state
-        session.logged_in = True
-        session.login_dummy = not session.login_dummy  # Change dummy variable to trigger rerun
-
-    def logout():
-        session = st.session_state
-        session.logged_in = False
-        session.form_hidden = False
-        session.logout_dummy = not session.logout_dummy  # Change dummy variable to trigger rerun
-
+    # define session variables to manage logged in state
     session = st.session_state
     if not "logged_in" in session:
         session.logged_in = False
@@ -85,25 +50,64 @@ def login_form():
     if not "logout_dummy" in session:
         session.logout_dummy = False
 
-    st.sidebar.title("Login")
+    def login():
+        session = st.session_state
+
+        if session.username in w3.eth.accounts:
+            session.logged_in = True
+
+            # change dummy variable to trigger rerun
+            session.login_dummy = not session.login_dummy
+
+            w3.eth.default_account = session.username
+
+            # Sign the message with the account private key
+            private_key = os.getenv('PRIVATE_KEY')
+            account = Account.privateKeyToAccount(private_key)
+            message = encode_defunct(text='login')
+            signature = account.sign_message(message)
+
+            # extract the v, r, s values from the signature
+            v, r, s = signature.v, signature.r, signature.s
+
+            # get the address that signed the message
+            signer_address = Account.recover_message(message, vrs=(v, r, s))
+
+            st.write(f'signer address: {signer_address}')
+            st.write(f'session.username: {session.username}')
+
+            # Call the login function to log in a user
+            tx_hash = contract.functions.login(signature.signature).transact({'from': session.username, 'gas': 1000000})
+            tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
+
+            st.write(tx_receipt)
+
+            return True
+
+        return False
+
+    def logout():
+        session = st.session_state
+        session.logged_in = False
+        session.form_hidden = False
+        session.logout_dummy = not session.logout_dummy
+
+    st.sidebar.title('Login')
 
     if not session.logged_in:
-        if st.sidebar.button("Login", key="login", on_click=login):
-
-            if session.username == "admin" and session.password == "1234":
-                login()
-                st.sidebar.success("Logged in as {}".format(session.username))
-                session.form_hidden = True  # Hide the form after attempting to log in
+        if st.sidebar.button('Login', key='login', on_click=login):
+            if login():
+                st.sidebar.success(f'Logged in as {session.username}')
+                session.form_hidden = True
             else:
                 st.sidebar.error("Incorrect username or password")
 
         if not session.form_hidden:
-            session.username = st.sidebar.text_input("Username", value=session.username)
-            session.password = st.sidebar.text_input("Password", type="password", value=session.password)
+            session.username = st.sidebar.text_input('Account ID', value=session.username)
 
     if session.logged_in:
-        st.sidebar.write("Logged in")
-        if st.sidebar.button("Logout", key="logout", on_click=logout):
+        st.sidebar.write('Logged in')
+        if st.sidebar.button('Logout', key='logout', on_click=logout):
             logout()
 
 login_form()
