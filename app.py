@@ -68,19 +68,33 @@ def test():
         session.logged_in = True
 
     session = st.session_state
-    if not hasattr(session, "logged_in"):
+    if not "logged_in" in session:
         session.logged_in = False
+    if not "form_hidden" in session:
+        session.form_hidden = False
+    if not "username" in session:
+        session.username = ""
+    if not "password" in session:
+        session.password = ""
 
     st.sidebar.title("Login")
 
     if not session.logged_in:
-        username = st.sidebar.text_input("Username")
-
         if st.sidebar.button("Login"):
-            # You can add authentication logic here to check the credentials
-            login()
-            st.sidebar.success("Logged in as {}".format(username))
-    else:
+
+            if session.username == "admin" and session.password == "1234":
+                login()
+                st.sidebar.success("Logged in as {}".format(session.username))
+            else:
+                st.sidebar.error("Incorrect username or password")
+
+            session.form_hidden = True  # Hide the form after attempting to log in
+
+        if not session.form_hidden:
+            session.username = st.sidebar.text_input("Username", value=session.username)
+            session.password = st.sidebar.text_input("Password", type="password", value=session.password)
+
+    if session.logged_in:
         st.sidebar.write("Logged in")
 
 test()
