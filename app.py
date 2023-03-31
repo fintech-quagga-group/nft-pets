@@ -3,12 +3,14 @@ import json
 from web3 import Web3, Account
 from pathlib import Path
 from dotenv import load_dotenv
+import openai
 
 import streamlit as st
 
 load_dotenv()
 
 w3 = Web3(Web3.HTTPProvider(os.getenv("WEB3_PROVIDER_URI")))
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 ################################################################################
 # Contract Helper function:
@@ -116,11 +118,24 @@ if session.logged_in:
 
     with open("Resources/Animals.txt") as file:
         all_animals = file.read().splitlines()
+        selection = st.selectbox('Select animal', all_animals) 
+    
+    animal = str(selection.lower().replace('','_'))
+    PROMPT = (f"pixel art {animal}")
 
-    animal = st.selectbox('Select an animal', all_animals) 
+    def generate_nft_pet():
+        response = openai.Image.create(
+        prompt=PROMPT,
+        n=1,
+        size="256x256")
+        return response
+
+    if st.button("Generate"):
+        response = generate_nft_pet()
+        nft_uri = response["data"][0]["url"]
+        st.image(nft_uri)
 
     session = st.session_state
-
     pet_name = st.text_input('Name')
     nft_uri = st.text_input("The URI to the Pets")
     price = st.text_input('Price in Wei')
