@@ -114,7 +114,7 @@ if session.logged_in:
     # Register new NFT Pet
     ################################################################################
 
-    st.title("Register new NFT Pet")
+    st.title("Register New NFT Pet")
 
     with open("Resources/Animals.txt") as file:
         all_animals = file.read().splitlines()
@@ -135,7 +135,6 @@ if session.logged_in:
         nft_uri = response["data"][0]["url"]
         st.image(nft_uri)
 
-    session = st.session_state
     pet_name = st.text_input('Name')
     nft_uri = st.text_input("The URI to the Pets")
     price = st.text_input('Price in Wei')
@@ -163,24 +162,12 @@ if session.logged_in:
     ################################################################################
     st.markdown("## Display an NFT Pet")
 
-    accounts = w3.eth.accounts
+    tokens = contract.functions.balanceOf(session.username).call()
 
-    selected_address = st.selectbox("Select Account", options=accounts)
-
-    tokens = contract.functions.balanceOf(selected_address).call()
-
-    st.write(f"This address owns {tokens} NFT Pets")
-
-    token_id = st.selectbox("NFT Pets", list(range(tokens)))
+    token_id = st.selectbox("Select a Pet", list(range(tokens)))
 
     if st.button("Display"):
-        owner = contract.functions.ownerOf(token_id).call()
-
-        st.write(f"The NFT Pet is registered to {owner}")
-
         token_uri = contract.functions.tokenURI(token_id).call()
-
-        st.write(f"The NFT Pet URI is {token_uri}")
         st.image(token_uri)
 
     st.markdown("---")
@@ -190,10 +177,6 @@ if session.logged_in:
     ################################################################################
     st.markdown('## Your NFT Pets')
 
-    session = st.session_state
-
-    st.write(session.username)
-
     owned_pets = contract.functions.getOwnedPets(session.username).call()
 
     for pet in owned_pets:
@@ -202,7 +185,6 @@ if session.logged_in:
     ################################################################################
     # View all tokens available for sale
     ################################################################################
-
     st.markdown('## NFT Pet Marketplace')
 
     pets_for_sale = contract.functions.getPetsForSale().call()
