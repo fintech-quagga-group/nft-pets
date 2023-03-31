@@ -2,15 +2,15 @@ import os
 import json
 from web3 import Web3, Account
 from pathlib import Path
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 import openai
 
 import streamlit as st
 
-load_dotenv()
+env = dotenv_values()
 
-w3 = Web3(Web3.HTTPProvider(os.getenv("WEB3_PROVIDER_URI")))
-openai.api_key = os.getenv("OPENAI_API_KEY")
+w3 = Web3(Web3.HTTPProvider(env["WEB3_PROVIDER_URI"]))
+openai.api_key = env["OPENAI_API_KEY"]
 
 ################################################################################
 # Contract Helper function:
@@ -20,7 +20,7 @@ def load_contract():
     with open(Path('./Smart_Contracts/Compiled/pet_token_abi.json')) as f:
         pet_token_abi = json.load(f)
 
-    contract_address = os.getenv("SMART_CONTRACT_ADDRESS")
+    contract_address = env["SMART_CONTRACT_ADDRESS"]
 
     contract = w3.eth.contract(
         address=contract_address,
@@ -53,16 +53,19 @@ def login_form():
     def login():
         session = st.session_state
 
+        # reload the env file
+        env = dotenv_values()
+
         if session.username in w3.eth.accounts:
-            session.logged_in = True
-
-            # change dummy variable to trigger rerun
-            session.login_dummy = not session.login_dummy
-
-            account = Account.privateKeyToAccount(os.getenv('PRIVATE_KEY'))
+            account = Account.privateKeyToAccount(env['PRIVATE_KEY'])
 
             # verify that the stored private key is correct for the provided address
             if Web3.toChecksumAddress(session.username) == account.address:
+                session.logged_in = True
+
+                # change dummy variable to trigger rerun
+                session.login_dummy = not session.login_dummy
+
                 st.sidebar.success(f'Logged into account with address: {session.username}')
                 w3.eth.default_account = session.username
 
@@ -71,7 +74,6 @@ def login_form():
 
                 return True
             else:
-                st.sidebar.error(f'Private key is not correct for address: {session.username}')
                 return False
 
         return False
@@ -84,7 +86,7 @@ def login_form():
 
         contract.functions.logout().transact({'from': session.username, 'gas': 1000000})
         w3.eth.default_account = None
-
+    
     st.sidebar.title('Login')
 
     if not session.logged_in:
@@ -95,7 +97,7 @@ def login_form():
                 st.sidebar.success(f'Logged in as {session.username}')
                 session.form_hidden = True
             else:
-                st.sidebar.error('Incorrect username or password')
+                st.sidebar.error('Incorrect Account ID or stored private key.')
 
     if session.logged_in:
         st.sidebar.write('Logged in')
