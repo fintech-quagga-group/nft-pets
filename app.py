@@ -194,3 +194,6 @@ if session.logged_in:
 
     for pet in pets_for_sale:
         st.image(contract.functions.tokenURI(pet).call())
+else:
+    st.markdown("# :arrow_left:")
+    st.title('Please use the sidebar to login with a connected Ethereum address.')
