@@ -2,15 +2,15 @@ import os
 import json
 from web3 import Web3, Account
 from pathlib import Path
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 import openai
 
 import streamlit as st
 
-load_dotenv()
+env = dotenv_values()
 
-w3 = Web3(Web3.HTTPProvider(os.getenv("WEB3_PROVIDER_URI")))
-openai.api_key = os.getenv("OPENAI_API_KEY")
+w3 = Web3(Web3.HTTPProvider(env["WEB3_PROVIDER_URI"]))
+openai.api_key = env["OPENAI_API_KEY"]
 
 ################################################################################
 # Contract Helper function:
@@ -20,7 +20,7 @@ def load_contract():
     with open(Path('./Smart_Contracts/Compiled/pet_token_abi.json')) as f:
         pet_token_abi = json.load(f)
 
-    contract_address = os.getenv("SMART_CONTRACT_ADDRESS")
+    contract_address = env["SMART_CONTRACT_ADDRESS"]
 
     contract = w3.eth.contract(
         address=contract_address,
@@ -59,7 +59,11 @@ def login_form():
             # change dummy variable to trigger rerun
             session.login_dummy = not session.login_dummy
 
-            account = Account.privateKeyToAccount(os.getenv('PRIVATE_KEY'))
+            account = Account.privateKeyToAccount(env['PRIVATE_KEY'])
+
+            st.write(session.username)
+            st.write(account.address)
+            st.write(env['PRIVATE_KEY'])
 
             # verify that the stored private key is correct for the provided address
             if Web3.toChecksumAddress(session.username) == account.address:
@@ -84,7 +88,7 @@ def login_form():
 
         contract.functions.logout().transact({'from': session.username, 'gas': 1000000})
         w3.eth.default_account = None
-
+    
     st.sidebar.title('Login')
 
     if not session.logged_in:
