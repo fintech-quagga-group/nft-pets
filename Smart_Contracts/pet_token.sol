@@ -1,10 +1,13 @@
 pragma solidity ^0.5.5;
 
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v2.5.0/contracts/token/ERC721/ERC721Full.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v2.5.0/contracts/cryptography/ECDSA.sol";
 
 contract PetToken is ERC721Full {
-    constructor() public ERC721Full("PetToken", "PET") {}
+    address payable public middleman;
+
+    constructor() public ERC721Full("PetToken", "PET") {
+        middleman = msg.sender;
+    }
 
     // define struct for a Pet token, and a mapping to have all minted pets
     struct Pet {
@@ -17,7 +20,7 @@ contract PetToken is ERC721Full {
     mapping (uint256 => Pet) public pets;
 
     // events to track minting a pet, changing the price of a pet, and the sale of a pet
-    event PetRegistered(uint256 tokenId, string name, string ownerName, uint256 price, bool isBuyable);
+    event PetRegistered(uint256 tokenId, string name, string ownerName, uint256 price, bool isBuyable, address indexed middleman);
     event PetPriceChanged(uint256 tokenId, uint256 price);
     event PetSold(uint256 tokenId, address oldOwner, address newOwner, uint256 price);
 
@@ -29,7 +32,7 @@ contract PetToken is ERC721Full {
 
         pets[tokenId] = Pet(name, ownerName, price, isBuyable);
 
-        emit PetRegistered(tokenId, name, ownerName, price, isBuyable);
+        emit PetRegistered(tokenId, name, ownerName, price, isBuyable, middleman);
 
         return tokenId;
     }
@@ -52,12 +55,16 @@ contract PetToken is ERC721Full {
         require(oldOwner != newOwner, "You already own this token");
         require(msg.value == price, "Incorrect value sent");
 
+        // transfer the 2% fee to the middleman address
+        uint256 fee = price * 2 / 100;
+        middleman.transfer(fee);
+
         _transferFrom(oldOwner, newOwner, tokenId);
 
         // change owner name within Pet struct
         pets[tokenId].ownerName = ERC721Metadata(address(this)).name();
 
-        oldOwner.transfer(msg.value);
+        oldOwner.transfer(price - fee);
 
         emit PetSold(tokenId, oldOwner, newOwner, price);
     }
