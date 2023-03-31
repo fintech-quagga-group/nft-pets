@@ -88,15 +88,14 @@ def login_form():
     st.sidebar.title('Login')
 
     if not session.logged_in:
+        if not session.form_hidden:
+            session.username = st.sidebar.text_input('Account ID', value=session.username)
         if st.sidebar.button('Login', key='login', on_click=login):
             if login():
                 st.sidebar.success(f'Logged in as {session.username}')
                 session.form_hidden = True
             else:
                 st.sidebar.error('Incorrect username or password')
-
-        if not session.form_hidden:
-            session.username = st.sidebar.text_input('Account ID', value=session.username)
 
     if session.logged_in:
         st.sidebar.write('Logged in')
