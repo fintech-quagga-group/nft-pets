@@ -54,11 +54,6 @@ def login_form():
         session = st.session_state
 
         if session.username in w3.eth.accounts:
-            session.logged_in = True
-
-            # change dummy variable to trigger rerun
-            session.login_dummy = not session.login_dummy
-
             account = Account.privateKeyToAccount(env['PRIVATE_KEY'])
 
             st.write(session.username)
@@ -67,6 +62,11 @@ def login_form():
 
             # verify that the stored private key is correct for the provided address
             if Web3.toChecksumAddress(session.username) == account.address:
+                session.logged_in = True
+
+                # change dummy variable to trigger rerun
+                session.login_dummy = not session.login_dummy
+
                 st.sidebar.success(f'Logged into account with address: {session.username}')
                 w3.eth.default_account = session.username
 
