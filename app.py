@@ -104,88 +104,93 @@ def login_form():
 login_form()
 
 ################################################################################
-# Register new NFT Pet
+# Check if user is logged in before displaying the rest of the code
 ################################################################################
-
-st.title("Register new NFT Pet")
-
-with open("Resources/Animals.txt") as file:
-    all_animals = file.read().splitlines()
-
-animal = st.selectbox('Select an animal', all_animals) 
-
 session = st.session_state
+if session.logged_in:
+    ################################################################################
+    # Register new NFT Pet
+    ################################################################################
 
-pet_name = st.text_input('Name')
-nft_uri = st.text_input("The URI to the Pets")
-price = st.text_input('Price in Wei')
-is_buyable = st.radio(
-    "Put Pet on Marketplace?",
-    ('Yes', 'No')
-)
+    st.title("Register new NFT Pet")
 
-if st.button("Register NFT Pet"):
-    tx_hash = contract.functions.registerPet(
-        pet_name,
-        session.username,
-        int(price),
-        nft_uri,
-        True if is_buyable == 'Yes' else False
-    ).transact({'from': session.username, 'gas': 1000000})
-    receipt = w3.eth.waitForTransactionReceipt(tx_hash)
-    st.write("Transaction receipt mined:")
-    st.write(dict(receipt))
+    with open("Resources/Animals.txt") as file:
+        all_animals = file.read().splitlines()
 
-st.markdown("---")
+    animal = st.selectbox('Select an animal', all_animals) 
 
-################################################################################
-# Display a Token
-################################################################################
-st.markdown("## Display an NFT Pet")
+    session = st.session_state
 
-accounts = w3.eth.accounts
+    pet_name = st.text_input('Name')
+    nft_uri = st.text_input("The URI to the Pets")
+    price = st.text_input('Price in Wei')
+    is_buyable = st.radio(
+        "Put Pet on Marketplace?",
+        ('Yes', 'No')
+    )
 
-selected_address = st.selectbox("Select Account", options=accounts)
+    if st.button("Register NFT Pet"):
+        tx_hash = contract.functions.registerPet(
+            pet_name,
+            session.username,
+            int(price),
+            nft_uri,
+            True if is_buyable == 'Yes' else False
+        ).transact({'from': session.username, 'gas': 1000000})
+        receipt = w3.eth.waitForTransactionReceipt(tx_hash)
+        st.write("Transaction receipt mined:")
+        st.write(dict(receipt))
 
-tokens = contract.functions.balanceOf(selected_address).call()
+    st.markdown("---")
 
-st.write(f"This address owns {tokens} NFT Pets")
+    ################################################################################
+    # Display a Token
+    ################################################################################
+    st.markdown("## Display an NFT Pet")
 
-token_id = st.selectbox("NFT Pets", list(range(tokens)))
+    accounts = w3.eth.accounts
 
-if st.button("Display"):
-    owner = contract.functions.ownerOf(token_id).call()
+    selected_address = st.selectbox("Select Account", options=accounts)
 
-    st.write(f"The NFT Pet is registered to {owner}")
+    tokens = contract.functions.balanceOf(selected_address).call()
 
-    token_uri = contract.functions.tokenURI(token_id).call()
+    st.write(f"This address owns {tokens} NFT Pets")
 
-    st.write(f"The NFT Pet URI is {token_uri}")
-    st.image(token_uri)
+    token_id = st.selectbox("NFT Pets", list(range(tokens)))
 
-st.markdown("---")
+    if st.button("Display"):
+        owner = contract.functions.ownerOf(token_id).call()
 
-################################################################################
-# View tokens that you own
-################################################################################
-st.markdown('## Your NFT Pets')
+        st.write(f"The NFT Pet is registered to {owner}")
 
-session = st.session_state
+        token_uri = contract.functions.tokenURI(token_id).call()
 
-st.write(session.username)
+        st.write(f"The NFT Pet URI is {token_uri}")
+        st.image(token_uri)
 
-owned_pets = contract.functions.getOwnedPets(session.username).call()
+    st.markdown("---")
 
-for pet in owned_pets:
-    st.image(contract.functions.tokenURI(pet).call())
+    ################################################################################
+    # View tokens that you own
+    ################################################################################
+    st.markdown('## Your NFT Pets')
 
-################################################################################
-# View all tokens available for sale
-################################################################################
+    session = st.session_state
 
-st.markdown('## NFT Pet Marketplace')
+    st.write(session.username)
 
-pets_for_sale = contract.functions.getPetsForSale().call()
+    owned_pets = contract.functions.getOwnedPets(session.username).call()
 
-for pet in pets_for_sale:
-    st.image(contract.functions.tokenURI(pet).call())
+    for pet in owned_pets:
+        st.image(contract.functions.tokenURI(pet).call())
+
+    ################################################################################
+    # View all tokens available for sale
+    ################################################################################
+
+    st.markdown('## NFT Pet Marketplace')
+
+    pets_for_sale = contract.functions.getPetsForSale().call()
+
+    for pet in pets_for_sale:
+        st.image(contract.functions.tokenURI(pet).call())
