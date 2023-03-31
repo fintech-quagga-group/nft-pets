@@ -104,34 +104,34 @@ def login_form():
 login_form()
 
 ################################################################################
-# Drowdown Menu for Pet Generation
+# Register new NFT Pet
 ################################################################################
 
-st.title("Pet Selector")
+st.title("Register new NFT Pet")
 
 with open("Resources/Animals.txt") as file:
     all_animals = file.read().splitlines()
 
 animal = st.selectbox('Select an animal', all_animals) 
 
-################################################################################
-# Register new NFT Pet
-################################################################################
+session = st.session_state
 
-st.title("Register new NFT Pet")
-accounts = w3.eth.accounts
-
-address = st.selectbox("Select Pet Owner", options=accounts)
-
+pet_name = st.text_input('Name')
 nft_uri = st.text_input("The URI to the Pets")
+price = st.text_input('Price in Wei')
+is_buyable = st.radio(
+    "Put Pet on Marketplace?",
+    ('Yes', 'No')
+)
 
 if st.button("Register NFT Pet"):
     tx_hash = contract.functions.registerPet(
-        'petName',
-        'ownerName',
-        1000,
-        nft_uri
-    ).transact({'from': address, 'gas': 1000000})
+        pet_name,
+        session.username,
+        int(price),
+        nft_uri,
+        True if is_buyable == 'Yes' else False
+    ).transact({'from': session.username, 'gas': 1000000})
     receipt = w3.eth.waitForTransactionReceipt(tx_hash)
     st.write("Transaction receipt mined:")
     st.write(dict(receipt))
@@ -142,6 +142,8 @@ st.markdown("---")
 # Display a Token
 ################################################################################
 st.markdown("## Display an NFT Pet")
+
+accounts = w3.eth.accounts
 
 selected_address = st.selectbox("Select Account", options=accounts)
 
