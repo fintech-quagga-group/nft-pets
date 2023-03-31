@@ -130,20 +130,16 @@ if session.logged_in:
         size="256x256")
         return response
 
-    if st.button("Generate"):
-        response = generate_nft_pet()
-        nft_uri = response["data"][0]["url"]
-        st.image(nft_uri)
-
     pet_name = st.text_input('Name')
-    nft_uri = st.text_input("The URI to the Pets")
     price = st.text_input('Price in Wei')
     is_buyable = st.radio(
-        "Put Pet on Marketplace?",
+        "List Pet on Marketplace?",
         ('Yes', 'No')
     )
 
     if st.button("Register NFT Pet"):
+        nft_uri = generate_nft_pet()['data'][0]['url']
+
         tx_hash = contract.functions.registerPet(
             pet_name,
             session.username,
@@ -151,9 +147,14 @@ if session.logged_in:
             nft_uri,
             True if is_buyable == 'Yes' else False
         ).transact({'from': session.username, 'gas': 1000000})
+
         receipt = w3.eth.waitForTransactionReceipt(tx_hash)
         st.write("Transaction receipt mined:")
-        st.write(dict(receipt))
+        with st.expander('View Transaction Receipt', expanded=False):
+            st.write(dict(receipt))
+
+        st.write('New NFT pet created:')
+        st.image(nft_uri)
 
     st.markdown("---")
 
