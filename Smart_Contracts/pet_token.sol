@@ -11,24 +11,25 @@ contract PetToken is ERC721Full {
         string name;
         string ownerName;
         uint256 price;
+        bool isBuyable;
     }
 
     mapping (uint256 => Pet) public pets;
 
     // events to track minting a pet, changing the price of a pet, and the sale of a pet
-    event PetRegistered(uint256 tokenId, string name, string ownerName, uint256 price);
+    event PetRegistered(uint256 tokenId, string name, string ownerName, uint256 price, bool isBuyable);
     event PetPriceChanged(uint256 tokenId, uint256 price);
     event PetSold(uint256 tokenId, address oldOwner, address newOwner, uint256 price);
 
     // function similar to ArtToken registerArtwork; emits PetRegistered event
-    function registerPet(string memory name, string memory ownerName, uint256 price, string memory tokenURI) public returns (uint256) {
+    function registerPet(string memory name, string memory ownerName, uint256 price, string memory tokenURI, bool isBuyable) public returns (uint256) {
         uint256 tokenId = totalSupply();
         _mint(msg.sender, tokenId);
         _setTokenURI(tokenId, tokenURI);
 
-        pets[tokenId] = Pet(name, ownerName, price);
+        pets[tokenId] = Pet(name, ownerName, price, isBuyable);
 
-        emit PetRegistered(tokenId, name, ownerName, price);
+        emit PetRegistered(tokenId, name, ownerName, price, isBuyable);
 
         return tokenId;
     }
@@ -62,20 +63,19 @@ contract PetToken is ERC721Full {
     }
 
     function getPetsForSale() public view returns (uint256[] memory) {
-        // count how many pets of all the minted pets are up for sale 
+        // count how many pets are available for sell
         uint256 count = 0;
         for (uint256 i = 0; i < totalSupply(); i++) {
-            if (ownerOf(i) != address(0) && pets[i].price > 0) {
+            if (ownerOf(i) != address(0) && pets[i].isBuyable) {
                 count++;
             }
         }
 
+        // loop through and return tokens of all buyable pets
         uint256[] memory result = new uint256[](count);
         uint256 index = 0;
-
-        // loop through buyable pets and return array of all the tokenIds
         for (uint256 i = 0; i < totalSupply(); i++) {
-            if (ownerOf(i) != address(0) && pets[i].price > 0) {
+            if (ownerOf(i) != address(0) && pets[i].isBuyable) {
                 result[index] = i;
                 index++;
             }
