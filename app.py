@@ -75,7 +75,6 @@ def login_form():
 
                 return True
             else:
-                st.sidebar.error(f'Private key is not correct for address: {session.username}')
                 return False
 
         return False
@@ -99,7 +98,7 @@ def login_form():
                 st.sidebar.success(f'Logged in as {session.username}')
                 session.form_hidden = True
             else:
-                st.sidebar.error('Incorrect username or password')
+                st.sidebar.error('Incorrect Account ID or stored private key.')
 
     if session.logged_in:
         st.sidebar.write('Logged in')
