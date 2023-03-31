@@ -53,6 +53,9 @@ def login_form():
     def login():
         session = st.session_state
 
+        # reload the env file
+        env = dotenv_values()
+
         if session.username in w3.eth.accounts:
             account = Account.privateKeyToAccount(env['PRIVATE_KEY'])
 
