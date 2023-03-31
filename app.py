@@ -59,10 +59,6 @@ def login_form():
         if session.username in w3.eth.accounts:
             account = Account.privateKeyToAccount(env['PRIVATE_KEY'])
 
-            st.write(session.username)
-            st.write(account.address)
-            st.write(env['PRIVATE_KEY'])
-
             # verify that the stored private key is correct for the provided address
             if Web3.toChecksumAddress(session.username) == account.address:
                 session.logged_in = True
