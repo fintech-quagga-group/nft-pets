@@ -176,8 +176,6 @@ if session.logged_in:
         st.image(token_uri)
 
     def get_chatgpt_response(text):
-        openai.api_key = "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"
-
         response = openai.ChatCompletion.create(
             model='gpt-3.5-turbo',
             messages=[
