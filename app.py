@@ -164,13 +164,33 @@ if session.logged_in:
     ################################################################################
     st.markdown("## Display an NFT Pet")
 
+    if not "displayed_pet" in session:
+        session.displayed_pet = None
+
     tokens = contract.functions.balanceOf(session.username).call()
 
     token_id = st.selectbox("Select a Pet", list(range(tokens)))
 
-    if st.button("Display"):
+    if token_id is not None:
         token_uri = contract.functions.tokenURI(token_id).call()
         st.image(token_uri)
+
+    def get_chatgpt_response(text):
+        openai.api_key = "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"
+
+        response = openai.ChatCompletion.create(
+            model='gpt-3.5-turbo',
+            messages=[
+                {"role": "system", "content": "You are a NFT pet."},
+                {"role": "user", "content": text},
+            ]
+        )
+
+        message = response.choices[0]['message']
+        return f'{message["role"]}: {message["content"]}'
+
+    text = st.text_input('Chat with your NFT pet!')
+    st.write(get_chatgpt_response(text))
 
     st.markdown("---")
 
