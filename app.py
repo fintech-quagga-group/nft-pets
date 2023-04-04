@@ -219,9 +219,9 @@ if session.logged_in:
         if st.button('Buy Pet'):
             try: 
                 contract.functions.buyPet(pet).transact({'from': session.username, 'value': int(pet_info[2]), 'gas': 1000000})
+                st.experimental_rerun()
             except ValueError: 
                 st.write('You already own this pet!')
-            st.experimental_rerun()
 else:
     st.markdown("# :arrow_left:")
     st.title('Please use the sidebar to login with a connected Ethereum address.')
