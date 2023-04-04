@@ -188,7 +188,7 @@ if session.logged_in:
         return f'{message["role"]}: {message["content"]}'
 
     text = st.text_input('Chat with your NFT pet!')
-    st.write(get_chatgpt_response(text))
+    #st.write(get_chatgpt_response(text))
 
     st.markdown("---")
 
@@ -211,6 +211,9 @@ if session.logged_in:
 
     for pet in pets_for_sale:
         st.image(contract.functions.tokenURI(pet).call())
+
+        if st.button('Buy Pet'):
+            contract.functions.buyPet(pet).transact({'from': session.username, 'value': 1000, 'gas': 1000000})
 else:
     st.markdown("# :arrow_left:")
     st.title('Please use the sidebar to login with a connected Ethereum address.')
