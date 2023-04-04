@@ -187,8 +187,17 @@ if session.logged_in:
         message = response.choices[0]['message']
         return f'{message["role"]}: {message["content"]}'
 
+    if not "chat_history" in session:
+        session.chat_history = []
+
     text = st.text_input('Chat with your NFT pet!')
-    #st.write(get_chatgpt_response(text))
+    if text:
+        session.chat_history.append({"role": "user", "content": text})
+        response = get_chatgpt_response(text)
+        session.chat_history.append({"role": "system", "content": response})
+
+    for message in session.chat_history:
+        st.write(f'{message["role"]}: {message["content"]}')
 
     st.markdown("---")
 
