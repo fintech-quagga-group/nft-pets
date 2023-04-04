@@ -210,10 +210,17 @@ if session.logged_in:
     pets_for_sale = contract.functions.getPetsForSale().call()
 
     for pet in pets_for_sale:
+        pet_info = contract.functions.getPet(pet).call()
+
         st.image(contract.functions.tokenURI(pet).call())
+        st.write(f'Name: {pet_info[0]}')
+        st.write(f'Price: {pet_info[2]} Wei')
 
         if st.button('Buy Pet'):
-            contract.functions.buyPet(pet).transact({'from': session.username, 'value': 1000, 'gas': 1000000})
+            try: 
+                contract.functions.buyPet(pet).transact({'from': session.username, 'value': int(pet_info[2]), 'gas': 1000000})
+            except ValueError: 
+                st.write('You alread own this pet!')
 else:
     st.markdown("# :arrow_left:")
     st.title('Please use the sidebar to login with a connected Ethereum address.')
