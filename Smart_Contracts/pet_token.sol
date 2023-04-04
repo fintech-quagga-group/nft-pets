@@ -17,6 +17,12 @@ contract PetToken is ERC721Full {
         bool isBuyable;
     }
 
+    // function to get attributes based on token ID
+    function getPet(uint256 tokenId) public view returns (string memory, string memory, uint256, bool) {
+        Pet storage pet = pets[tokenId];
+        return (pet.name, pet.ownerName, pet.price, pet.isBuyable);
+    }
+
     mapping (uint256 => Pet) public pets;
 
     // events to track minting a pet, changing the price of a pet, and the sale of a pet
