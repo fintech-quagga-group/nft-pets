@@ -27,17 +27,21 @@ Optional
 
 ## Technologies
 
-Kaggle handles all code dependencies and we do not advise trying to run our notebooks on your own machine because of high memory usage. 
+This is a Python 3.8 project that uses the following dependencies:
 
-The following dependencies are used: 
-1. [Pandas](https://github.com/pandas-dev/pandas) (1.3.5) - Data analysis
-2. [Streamlit](https://streamlit.io/) (1.2.0) - Web app interface
-3. [Ganache](https://trufflesuite.com/ganache/) (2.7.0) - Ethereum blockchain
-4. [Solidarity](https://soliditylang.org/) (0.8.19) - Language for smart contract
-5. [Remix](https://remix-project.org/) - IDE for Web3 developement
-6. [ChatGTP](https://openai.com/blog/chatgpt) (3.5) - Chat features
-7. [DALL-E](https://labs.openai.com/) - Image creation
-8. [MetaMask](https://MetaMask.io/) (10.28.1) - Blockchain Wallet
+1. [Streamlit](https://streamlit.io/) (1.2.0) - Web app interface
+2. [Ganache](https://trufflesuite.com/ganache/) (2.7.0) - Ethereum blockchain
+3. [Solidity](https://soliditylang.org/) (0.8.19) - Language for smart contract
+4. [Remix](https://remix-project.org/) - IDE for Web3 developement
+5. [ChatGTP](https://openai.com/blog/chatgpt) (3.5) - Chat features
+6. [DALL-E](https://labs.openai.com/) - Image creation
+7. [MetaMask](https://MetaMask.io/) (10.28.1) - Blockchain Wallet
+---
+
+## Installation
+
+
+
 ---
 
 ## Usage
@@ -91,6 +95,24 @@ To run our app, you will need to create a local blockchain using Ganache and dep
     ```
 
     You can then put in the copied contract address from step 8 in the quotes for SMART_CONTRACT_ADDRESS
+
+11. Go to [https://platform.openai.com/overview](https://platform.openai.com/overview) and create an OpenAI account to access their API. 
+
+12. Once you are logged in, click on your account icon and use the "View API Keys" button on the dropdown list to access the [API keys page](https://platform.openai.com/account/api-keys). You can then use the "Create new secret key" button to get your OpenAI API key.
+
+    ![Header of the https://platform.openai.com/account/api-keys page](./Resources/Images/openai_api_keys.png)
+
+    ![Create secret key on open ai api keys page](./Resources/Images/create_secret_key.png)
+
+13. Add the line `OPENAI_API_KEY = ''` to your .env file and fill in the quotes with the API key you generated in the previous step. Your final .env file should now look like: 
+
+    ```
+    WEB3_PROVIDER_URI = 'HTTP://127.0.0.1:7545'
+    SMART_CONTRACT_ADDRESS = ''
+    OPENAI_API_KEY = ''
+    ```
+
+14. With Ganache open on your newly created workspace, your smart contract deployed on Remix, and your .env file setup with your secret keys, you are ready to run the app. In VSCode or your terminal you can run the app using the command `streamlit run app.py`
 
 ### Other Files 
 
