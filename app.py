@@ -127,170 +127,170 @@ session = st.session_state
 
 if session.logged_in:
 
-    ################################################################################
-    # Register new NFT Pet
-    ################################################################################
+    register_tab, chat_tab, your_pets_tab, marketplace_tab = st.tabs(["Register New Pet", "Chat", "Your Pets", "Marketplace"])
 
-    st.title("Register New NFT Pet")
+    with register_tab:
+        ################################################################################
+        # Register new NFT Pet
+        ################################################################################
 
-    # load list of animals that can be created as NFT pets
-    with open("Resources/Animals.txt") as file:
-        all_animals = file.read().splitlines()
-        selection = st.selectbox('Select animal', all_animals) 
-    
-    # create DALLE prompt based on chosen animal - ex: "pixel art dog"
-    animal = str(selection.lower().replace('','_'))
-    PROMPT = (f"pixel art {animal}")
+        st.title("Register New NFT Pet")
 
-    # call openai dalle api to generate image
-    def generate_nft_pet():
-        response = openai.Image.create(
-        prompt=PROMPT,
-        n=1,
-        size="256x256")
-        return response
+        # load list of animals that can be created as NFT pets
+        with open("Resources/Animals.txt") as file:
+            all_animals = file.read().splitlines()
+            selection = st.selectbox('Select animal', all_animals) 
+        
+        # create DALLE prompt based on chosen animal - ex: "pixel art dog"
+        animal = str(selection.lower().replace('','_'))
+        PROMPT = (f"pixel art {animal}")
 
-    # use form inputs to fill in Pet smart contract struct attributes
-    pet_name = st.text_input('Name')
-    price = st.text_input('Price in Wei')
-    is_buyable = st.radio(
-        "List Pet on Marketplace?",
-        ('Yes', 'No')
-    )
+        # call openai dalle api to generate image
+        def generate_nft_pet():
+            response = openai.Image.create(
+            prompt=PROMPT,
+            n=1,
+            size="256x256")
+            return response
 
-    if st.button("Register NFT Pet"):
-        nft_uri = generate_nft_pet()['data'][0]['url']
-
-        # call the registerPet smart contract function with the provided Pet info
-        tx_hash = contract.functions.registerPet(
-            pet_name,
-            session.username,
-            int(price),
-            nft_uri,
-            True if is_buyable == 'Yes' else False
-        ).transact({'from': session.username, 'gas': 1000000})
-
-        # display transaction receipt if user wants to verify
-        receipt = w3.eth.waitForTransactionReceipt(tx_hash)
-        st.write("Transaction receipt mined:")
-        with st.expander('View Transaction Receipt', expanded=False):
-            st.write(dict(receipt))
-
-        st.write('New NFT pet created:')
-        st.image(nft_uri)
-
-    st.markdown("---")
-
-    ################################################################################
-    # Chat with your NFT pet 
-    ################################################################################
-    st.markdown("## Chat With Your NFT Pets")
-
-    # session variables to reset chat history if user selects a new pet
-    if not "displayed_pet" in session:
-        session.displayed_pet = None
-    if not "chat_history" in session:
-        session.chat_history = []
-
-    def clear_chat():
-        """Helper function to clear the openai chat history for chatgpt call"""
-
-        session.chat_history = []
-        output_container.empty()
-
-    # display a selectbox for all of the currently logged in user's pets
-    token_id = st.selectbox("Select a Pet", contract.functions.getOwnedPets(session.username).call(), on_change=clear_chat)
-
-    # load the selected NFT pet
-    if token_id is not None:
-        token_uri = contract.functions.tokenURI(token_id).call()
-        st.image(token_uri)
-
-    def get_chatgpt_response(text, pet_name):
-        """
-        Calls the openai chatgpt function to generate text responses between users and their NFT pets
-
-        Parameters
-        ----------
-        text : string
-            Prompt to ask the NFT pet
-        pet_name : string
-            The stored name of the NFT pet
-
-        Returns
-        -------
-        string
-            Chatgpt response based on text input
-        """
-
-        response = openai.ChatCompletion.create(
-            model='gpt-3.5-turbo',
-            messages=[
-                {"role": "system", "content": "You are a NFT pet."},
-                {"role": "user", "content": text},
-            ]
+        # use form inputs to fill in Pet smart contract struct attributes
+        pet_name = st.text_input('Name')
+        price = st.text_input('Price in Wei')
+        is_buyable = st.radio(
+            "List Pet on Marketplace?",
+            ('Yes', 'No')
         )
 
-        # modify the response to replace "system" with the pet name
-        message = response.choices[0]['message']
-        return f'{pet_name}: {message["content"]}'
+        if st.button("Register NFT Pet"):
+            nft_uri = generate_nft_pet()['data'][0]['url']
 
-    # use session.chat_history to keep a running conversation with the selected NFT pet
-    text = st.text_input('Use the text box to send a message to your pet:')
-    if text:
-        session.chat_history.append({"role": "user", "content": text})
-        response = get_chatgpt_response(text, contract.functions.getPet(token_id).call()[0])
-        session.chat_history.append({"role": "system", "content": response})
+            # call the registerPet smart contract function with the provided Pet info
+            tx_hash = contract.functions.registerPet(
+                pet_name,
+                session.username,
+                int(price),
+                nft_uri,
+                True if is_buyable == 'Yes' else False
+            ).transact({'from': session.username, 'gas': 1000000})
 
-    # use a container so that we can clear the output on pet switch
-    output_container = st.container()
+            # display transaction receipt if user wants to verify
+            receipt = w3.eth.waitForTransactionReceipt(tx_hash)
+            st.write("Transaction receipt mined:")
+            with st.expander('View Transaction Receipt', expanded=False):
+                st.write(dict(receipt))
 
-    # inside the container, use st.write() to display the messages
-    with output_container:
-        for message in session.chat_history:
-            st.write(f'{message["content"]}')
+            st.write('New NFT pet created:')
+            st.image(nft_uri)
 
-    st.markdown("---")
+    with chat_tab:
+        ################################################################################
+        # Chat with your NFT pet 
+        ################################################################################
+        st.markdown("## Chat With Your NFT Pets")
 
-    ################################################################################
-    # Displays all of the NFT pets that the current user owns
-    ################################################################################
-    st.markdown('## Your NFT Pets')
+        # session variables to reset chat history if user selects a new pet
+        if not "displayed_pet" in session:
+            session.displayed_pet = None
+        if not "chat_history" in session:
+            session.chat_history = []
 
-    owned_pets = contract.functions.getOwnedPets(session.username).call()
+        def clear_chat():
+            """Helper function to clear the openai chat history for chatgpt call"""
 
-    for pet in owned_pets:
-        st.image(contract.functions.tokenURI(pet).call())
+            session.chat_history = []
+            output_container.empty()
 
-    st.markdown("---")
+        # display a selectbox for all of the currently logged in user's pets
+        token_id = st.selectbox("Select a Pet", contract.functions.getOwnedPets(session.username).call(), on_change=clear_chat)
 
-    ################################################################################
-    # View all pets currently available for sale
-    ################################################################################
-    st.markdown('## NFT Pet Marketplace')
+        # load the selected NFT pet
+        if token_id is not None:
+            token_uri = contract.functions.tokenURI(token_id).call()
+            st.image(token_uri)
 
-    pets_for_sale = contract.functions.getPetsForSale().call()
+        def get_chatgpt_response(text, pet_name):
+            """
+            Calls the openai chatgpt function to generate text responses between users and their NFT pets
 
-    for pet in pets_for_sale:
-        pet_info = contract.functions.getPet(pet).call()
+            Parameters
+            ----------
+            text : string
+                Prompt to ask the NFT pet
+            pet_name : string
+                The stored name of the NFT pet
 
-        # for each pet, display its image, name, and price in wei
-        st.image(contract.functions.tokenURI(pet).call())
-        st.write(f'Name: {pet_info[0]}')
-        st.write(f'Price: {pet_info[2]} Wei')
+            Returns
+            -------
+            string
+                Chatgpt response based on text input
+            """
 
-        # whne the buy pet button is called, use the smart contract buyPet function to complete the transaction
-        if st.button('Buy Pet', key=f'{pet}:{pet_info[0]}'):
-            try: 
-                contract.functions.buyPet(pet).transact({'from': session.username, 'value': int(pet_info[2]), 'gas': 1000000})
-                st.experimental_rerun()
-            except ValueError as e:
-                error = str(e)
+            response = openai.ChatCompletion.create(
+                model='gpt-3.5-turbo',
+                messages=[
+                    {"role": "system", "content": "You are a NFT pet."},
+                    {"role": "user", "content": text},
+                ]
+            )
 
-                if 'insufficient funds' in error:
-                    st.write('You have insufficient funds to buy this pet.')
-                elif 'You already own this token' in error:
-                    st.write('You alread own this pet!')
+            # modify the response to replace "system" with the pet name
+            message = response.choices[0]['message']
+            return f'{pet_name}: {message["content"]}'
+
+        # use session.chat_history to keep a running conversation with the selected NFT pet
+        text = st.text_input('Use the text box to send a message to your pet:')
+        if text:
+            session.chat_history.append({"role": "user", "content": text})
+            response = get_chatgpt_response(text, contract.functions.getPet(token_id).call()[0])
+            session.chat_history.append({"role": "system", "content": response})
+
+        # use a container so that we can clear the output on pet switch
+        output_container = st.container()
+
+        # inside the container, use st.write() to display the messages
+        with output_container:
+            for message in session.chat_history:
+                st.write(f'{message["content"]}')
+
+    with your_pets_tab:
+        ################################################################################
+        # Displays all of the NFT pets that the current user owns
+        ################################################################################
+        st.markdown('## Your NFT Pets')
+
+        owned_pets = contract.functions.getOwnedPets(session.username).call()
+
+        for pet in owned_pets:
+            st.image(contract.functions.tokenURI(pet).call())
+
+    with marketplace_tab:
+        ################################################################################
+        # View all pets currently available for sale
+        ################################################################################
+        st.markdown('## NFT Pet Marketplace')
+
+        pets_for_sale = contract.functions.getPetsForSale().call()
+
+        for pet in pets_for_sale:
+            pet_info = contract.functions.getPet(pet).call()
+
+            # for each pet, display its image, name, and price in wei
+            st.image(contract.functions.tokenURI(pet).call())
+            st.write(f'Name: {pet_info[0]}')
+            st.write(f'Price: {pet_info[2]} Wei')
+
+            # whne the buy pet button is called, use the smart contract buyPet function to complete the transaction
+            if st.button('Buy Pet', key=f'{pet}:{pet_info[0]}'):
+                try: 
+                    contract.functions.buyPet(pet).transact({'from': session.username, 'value': int(pet_info[2]), 'gas': 1000000})
+                    st.experimental_rerun()
+                except ValueError as e:
+                    error = str(e)
+
+                    if 'insufficient funds' in error:
+                        st.write('You have insufficient funds to buy this pet.')
+                    elif 'You already own this token' in error:
+                        st.write('You alread own this pet!')
 else:
     # when the user is not logged in, direct them to use the sidebar and login
     st.markdown("# :arrow_left:")
