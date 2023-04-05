@@ -201,8 +201,15 @@ if session.logged_in:
         if not "displayed_pet" in session:
             session.displayed_pet = None
 
+        # store a dict of the pet names to their IDs to display in selectbox
+        all_pets = contract.functions.getOwnedPets(session.username).call()
+        pet_names = {contract.functions.getPet(pet).call()[0]: pet for pet in all_pets}
+
         # display a selectbox for all of the currently logged in user's pets
-        token_id = st.selectbox("Select a Pet", contract.functions.getOwnedPets(session.username).call(), on_change=clear_chat)
+        selected_pet = st.selectbox("Select a Pet", pet_names, on_change=clear_chat)
+
+        # get the pet name to display; instead of token ID
+        token_id = pet_names[selected_pet]
 
         # load the selected NFT pet
         if token_id is not None:
