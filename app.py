@@ -166,6 +166,8 @@ if session.logged_in:
 
     if not "displayed_pet" in session:
         session.displayed_pet = None
+    if not "chat_history" in session:
+        session.chat_history = []
 
     tokens = contract.functions.balanceOf(session.username).call()
 
@@ -192,22 +194,18 @@ if session.logged_in:
         message = response.choices[0]['message']
         return f'{message["role"]}: {message["content"]}'
 
-    if not "chat_history" in session:
-        session.chat_history = []
-
     text = st.text_input('Chat with your NFT pet!')
     if text:
         session.chat_history.append({"role": "user", "content": text})
         response = get_chatgpt_response(text)
         session.chat_history.append({"role": "system", "content": response})
 
-    # Create a container
     output_container = st.container()
 
     # Inside the container, use st.write() to display the messages
     with output_container:
         for message in session.chat_history:
-            st.write(f'{message["role"]}: {message["content"]}')
+            st.write(f'{message["content"]}')
 
     st.markdown("---")
 
@@ -235,7 +233,7 @@ if session.logged_in:
         st.write(f'Name: {pet_info[0]}')
         st.write(f'Price: {pet_info[2]} Wei')
 
-        if st.button('Buy Pet'):
+        if st.button('Buy Pet', key=f'{pet}:{pet_info[0]}'):
             try: 
                 contract.functions.buyPet(pet).transact({'from': session.username, 'value': int(pet_info[2]), 'gas': 1000000})
                 st.experimental_rerun()
