@@ -37,6 +37,8 @@ contract = load_contract()
 # Login sidebar to login with the provided private key in .env file
 ################################################################################
 def login_form():
+    """Code to port the login sidebar for each page"""
+
     # define session variables to manage logged in state
     session = st.session_state
     if not "logged_in" in session:
@@ -53,6 +55,8 @@ def login_form():
         session.logout_dummy = False
 
     def login():
+        """Function to verify that the stored private address is accurate and call the contract login function"""
+
         session = st.session_state
 
         # reload the env file
@@ -81,6 +85,8 @@ def login_form():
         return False
 
     def logout():
+        """Update session variables and calls smart contract logout function"""
+
         # update session variables 
         session = st.session_state
         session.logged_in = False
