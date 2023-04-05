@@ -63,7 +63,7 @@ def login_form():
         env = dotenv_values()
 
         if session.username in w3.eth.accounts:
-            account = Account.privateKeyToAccount(env['PRIVATE_KEY'])
+            account = Account.privateKeyToAccount(session.password)
 
             # verify that the stored private key is correct for the provided address
             if Web3.toChecksumAddress(session.username) == account.address:
@@ -103,6 +103,7 @@ def login_form():
     if not session.logged_in:
         if not session.form_hidden:
             session.username = st.sidebar.text_input('Account ID', value=session.username)
+            session.password = st.sidebar.text_input('Private Key', type='password')
         if st.sidebar.button('Login', key='login', on_click=login):
             # call the login function to verify that the address is accurate to the stored private key
             if login():
