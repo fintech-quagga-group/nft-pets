@@ -13,10 +13,12 @@ w3 = Web3(Web3.HTTPProvider(env["WEB3_PROVIDER_URI"]))
 openai.api_key = env["OPENAI_API_KEY"]
 
 ################################################################################
-# Contract Helper function:
+# Load contract helper function
 ################################################################################
 @st.cache_resource
 def load_contract():
+    """Loads the deployed smart contract address from Remix"""
+
     with open(Path('./Smart_Contracts/Compiled/pet_token_abi.json')) as f:
         pet_token_abi = json.load(f)
 
@@ -32,7 +34,7 @@ def load_contract():
 contract = load_contract()
 
 ################################################################################
-# login sidebar
+# Login sidebar to login with the provided private key in .env file
 ################################################################################
 def login_form():
     # define session variables to manage logged in state
@@ -45,7 +47,7 @@ def login_form():
         session.username = ""
     if not "password" in session:
         session.password = ""
-    if not "login_dummy" in session:
+    if not "login_dummy" in session:         # create dummy login variables to trigger "double" page reload
         session.login_dummy = False
     if not "logout_dummy" in session:
         session.logout_dummy = False
@@ -79,26 +81,31 @@ def login_form():
         return False
 
     def logout():
+        # update session variables 
         session = st.session_state
         session.logged_in = False
         session.form_hidden = False
         session.logout_dummy = not session.logout_dummy
 
+        # call contract logout function to verify addresses
         contract.functions.logout().transact({'from': session.username, 'gas': 1000000})
         w3.eth.default_account = None
     
     st.sidebar.title('Login')
 
+    # display login form to accept public address
     if not session.logged_in:
         if not session.form_hidden:
             session.username = st.sidebar.text_input('Account ID', value=session.username)
         if st.sidebar.button('Login', key='login', on_click=login):
+            # call the login function to verify that the address is accurate to the stored private key
             if login():
                 st.sidebar.success(f'Logged in as {session.username}')
                 session.form_hidden = True
             else:
                 st.sidebar.error('Incorrect Account ID or stored private key.')
 
+    # don't show form if user is already logged in; display logout button
     if session.logged_in:
         st.sidebar.write('Logged in')
         if st.sidebar.button('Logout', key='logout', on_click=logout):
@@ -107,23 +114,28 @@ def login_form():
 login_form()
 
 ################################################################################
-# Check if user is logged in before displaying the rest of the code
+# Use session.logged_in to hide/show all content depending on login status
 ################################################################################
 session = st.session_state
+
 if session.logged_in:
+
     ################################################################################
     # Register new NFT Pet
     ################################################################################
 
     st.title("Register New NFT Pet")
 
+    # load list of animals that can be created as NFT pets
     with open("Resources/Animals.txt") as file:
         all_animals = file.read().splitlines()
         selection = st.selectbox('Select animal', all_animals) 
     
+    # create DALLE prompt based on chosen animal - ex: "pixel art dog"
     animal = str(selection.lower().replace('','_'))
     PROMPT = (f"pixel art {animal}")
 
+    # call openai dalle api to generate image
     def generate_nft_pet():
         response = openai.Image.create(
         prompt=PROMPT,
@@ -131,6 +143,7 @@ if session.logged_in:
         size="256x256")
         return response
 
+    # use form inputs to fill in Pet smart contract struct attributes
     pet_name = st.text_input('Name')
     price = st.text_input('Price in Wei')
     is_buyable = st.radio(
@@ -141,6 +154,7 @@ if session.logged_in:
     if st.button("Register NFT Pet"):
         nft_uri = generate_nft_pet()['data'][0]['url']
 
+        # call the registerPet smart contract function with the provided Pet info
         tx_hash = contract.functions.registerPet(
             pet_name,
             session.username,
@@ -149,6 +163,7 @@ if session.logged_in:
             True if is_buyable == 'Yes' else False
         ).transact({'from': session.username, 'gas': 1000000})
 
+        # display transaction receipt if user wants to verify
         receipt = w3.eth.waitForTransactionReceipt(tx_hash)
         st.write("Transaction receipt mined:")
         with st.expander('View Transaction Receipt', expanded=False):
@@ -160,29 +175,47 @@ if session.logged_in:
     st.markdown("---")
 
     ################################################################################
-    # Display a Token
+    # Chat with your NFT pet 
     ################################################################################
-    st.markdown("## Display an NFT Pet")
+    st.markdown("## Chat With Your NFT Pets")
 
+    # session variables to reset chat history if user selects a new pet
     if not "displayed_pet" in session:
         session.displayed_pet = None
     if not "chat_history" in session:
         session.chat_history = []
 
-    tokens = contract.functions.balanceOf(session.username).call()
-
     def clear_chat():
-        # Clear the container
+        """Helper function to clear the openai chat history for chatgpt call"""
+
         session.chat_history = []
         output_container.empty()
 
+    # display a selectbox for all of the currently logged in user's pets
     token_id = st.selectbox("Select a Pet", contract.functions.getOwnedPets(session.username).call(), on_change=clear_chat)
 
+    # load the selected NFT pet
     if token_id is not None:
         token_uri = contract.functions.tokenURI(token_id).call()
         st.image(token_uri)
 
     def get_chatgpt_response(text, pet_name):
+        """
+        Calls the openai chatgpt function to generate text responses between users and their NFT pets
+
+        Parameters
+        ----------
+        text : string
+            Prompt to ask the NFT pet
+        pet_name : string
+            The stored name of the NFT pet
+
+        Returns
+        -------
+        string
+            Chatgpt response based on text input
+        """
+
         response = openai.ChatCompletion.create(
             model='gpt-3.5-turbo',
             messages=[
@@ -191,18 +224,21 @@ if session.logged_in:
             ]
         )
 
+        # modify the response to replace "system" with the pet name
         message = response.choices[0]['message']
         return f'{pet_name}: {message["content"]}'
 
-    text = st.text_input('Chat with your NFT pet!')
+    # use session.chat_history to keep a running conversation with the selected NFT pet
+    text = st.text_input('Use the text box to send a message to your pet:')
     if text:
         session.chat_history.append({"role": "user", "content": text})
         response = get_chatgpt_response(text, contract.functions.getPet(token_id).call()[0])
         session.chat_history.append({"role": "system", "content": response})
 
+    # use a container so that we can clear the output on pet switch
     output_container = st.container()
 
-    # Inside the container, use st.write() to display the messages
+    # inside the container, use st.write() to display the messages
     with output_container:
         for message in session.chat_history:
             st.write(f'{message["content"]}')
@@ -210,7 +246,7 @@ if session.logged_in:
     st.markdown("---")
 
     ################################################################################
-    # View tokens that you own
+    # Displays all of the NFT pets that the current user owns
     ################################################################################
     st.markdown('## Your NFT Pets')
 
@@ -220,7 +256,7 @@ if session.logged_in:
         st.image(contract.functions.tokenURI(pet).call())
 
     ################################################################################
-    # View all tokens available for sale
+    # View all pets currently available for sale
     ################################################################################
     st.markdown('## NFT Pet Marketplace')
 
@@ -229,10 +265,12 @@ if session.logged_in:
     for pet in pets_for_sale:
         pet_info = contract.functions.getPet(pet).call()
 
+        # for each pet, display its image, name, and price in wei
         st.image(contract.functions.tokenURI(pet).call())
         st.write(f'Name: {pet_info[0]}')
         st.write(f'Price: {pet_info[2]} Wei')
 
+        # whne the buy pet button is called, use the smart contract buyPet function to complete the transaction
         if st.button('Buy Pet', key=f'{pet}:{pet_info[0]}'):
             try: 
                 contract.functions.buyPet(pet).transact({'from': session.username, 'value': int(pet_info[2]), 'gas': 1000000})
@@ -240,5 +278,6 @@ if session.logged_in:
             except ValueError: 
                 st.write('You already own this pet!')
 else:
+    # when the user is not logged in, direct them to use the sidebar and login
     st.markdown("# :arrow_left:")
     st.title('Please use the sidebar to login with a connected Ethereum address.')
