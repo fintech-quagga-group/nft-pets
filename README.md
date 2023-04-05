@@ -41,6 +41,25 @@ The following dependencies are used:
 ---
 
 ## Usage
+To run our app, you will need to create a local blockchain using Ganache and deploy the [pet_token.sol](./Smart_Contracts/pet_token.sol) smart contract on [Remix](https://remix.ethereum.org/) using an injected [Metamask](https://metamask.io/) provider.
+
+1. Open Ganache and create a quickstart Ethereum workspace. 
+
+    ![Ganache opening screen showing workspaces and buttons to create new workspaces](./Resources/Images/ganache_workspaces.png)
+
+2. Using the Metamask browser extension, setup a network how "devNetwork" is setup with the RPC url as HTTP://127.0.0.1:7545 and Chain ID as 1337. 
+
+    ![Metamask network UI showing an example devNetwork that has network name as devNetwork, new rpc url as HTTP://127.0.0.1:7545, chain ID as 1337, and currency symbol as PET](./Resources/Images/metamask_network.png)
+
+3. Click on the account bubble in the top right of Metamask to open the dropdown and use the "Import Account" button to create accounts. This will open a form to input a private key of an account, you can use this form to enter in the private keys of however many accounts you want from your newly created Ganache blockchain. You can grab the private key of an account by clicking the key icon at the far right of each account listed in your Ganache workspace. 
+
+    ![Metamask dropdown listing the Import Account button](./Resources/Images/metamask_accounts.png)
+
+    ![Metamask import account form with field to type in ganache account private key](./Resources/Images/metamask_import_account.png)
+
+    ![Public address and private key of a ganache account after pressing key icon](./Resources/Images/ganache_private_key.png)
+
+
 -To use this program, download github repository clone in a local environment.  Then you must download Ganache and open a new ethereum workspace.  In Ganache, copy both the RPC server address and the private key to an account from the list and paste them into a .env file in the repository folder.  <br>
 -With Ganache open, install the Metamask extension, open Metamask and create a new network using your Ganache RPC server address.  In this network, import accounts from Ganache using their private key. <br>
 -Register with OpenAI and copy your API key to the .env file. <br>
