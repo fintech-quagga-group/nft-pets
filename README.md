@@ -44,7 +44,7 @@ The following dependencies are used:
 -With Ganache open, install the Metamask extension, open Metamask and create a new network using your Ganache RPC server address.  In this network, import accounts from Ganache using their private key. <br>
 -Register with OpenAI and copy your API key to the .env file. <br>
 -Open your browser and go to (https://remix.ethereum.org/), select "open file" and load the Smart_Contracts folder from the repo.  Select  the pet_token.sol contract and hit "compile" from the left menu and choose the compiler 0.5.5+commit.47171e8f.  Select "compile pet_token.sold" <br>
--Deploy the contract with the button under compile on the left menu. For the environment variable select "Injected Provider - MetaMask".  THe orange button will deploy the contract. <br>
+-Deploy the contract with the button under compile on the left menu. For the environment variable select "Injected Provider - MetaMask".  The orange button will deploy the contract. <br>
 -Open the app.py file in the terminal and type "streamlit run app.py" <br>
 -Once Streamlit has opened, use login with your account key that matches the private key of one of your Ganache accounts.  At this point you should be logged in and ready to create, talk to, and trade NFT Pets. <br>
 ### Other Files 
