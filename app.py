@@ -1,4 +1,5 @@
 import os
+import time
 import json
 from web3 import Web3, Account
 from pathlib import Path
@@ -133,7 +134,6 @@ if session.logged_in:
         ################################################################################
         # Register new NFT Pet
         ################################################################################
-
         st.title("Register New NFT Pet")
 
         # load list of animals that can be created as NFT pets
@@ -283,6 +283,8 @@ if session.logged_in:
             if st.button('Buy Pet', key=f'{pet}:{pet_info[0]}'):
                 try: 
                     contract.functions.buyPet(pet).transact({'from': session.username, 'value': int(pet_info[2]), 'gas': 1000000})
+                    st.success('Pet purchased!')
+                    time.sleep(2)
                     st.experimental_rerun()
                 except ValueError as e:
                     error = str(e)
