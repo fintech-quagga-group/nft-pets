@@ -23,6 +23,26 @@ In this project we create NFT pets out of DALL-E generated pixel art images with
 
 ---
 
+### Summary
+
+In the Streamlit UI the user can interact with the Solidity smart contract functions to register, chat with, and buy NFT pets. After logging in with an Ethereum address connected through Ganache and MetaMask, you can register a new NFT pet that will be uniquely generated using the DALL-E image generator to create pixel art animals.
+
+![Using the UI to register a new NFT pet](./Resources/Gifs/register_pet.gif)
+
+With the ChatGPT API integrated in the app, the user can go to the chat tab and interact with each of their owned pets. The conversation will be maintained and built on as you talk with your pet, and will only reset if you decide to chat with another pet. The API also, somewhat, allows us to give a "personality" to the chatbot so ours is set to "NFT pet". This doesn't drastically change the responses you get compared to a normal ChatGPT conversation, but it will every now in then mention that it is supposed to act as an NFT pet. 
+
+![Using the UI to say "Hi Samson" and "can you write me a hello world program in python", with chatgpt responses](./Resources/Gifs/chat.gif)
+
+You can then see your entire collection of minted NFTs: 
+
+![List of 3 NFT pets in the app UI showing a cat, dog, and bear](./Resources/Images/your_nft_pets.png)
+
+You can also go to the marketplace tab and see all of the NFT pets that have been listed by the accounts on the blockchain. Assuming your logged in account has enough funds to purchase the pet, you can buy the pet and transfer ownership from the previous owner to yourself. You will then be able to chat with and view the pet on your account. 
+
+![Using the UI to buy the NFT cat created in the previous example and seeing it appear in the "Your Pets" tab](./Resources/Gifs/buy_pet.gif)
+
+---
+
 ## Technologies
 
 This is a Python 3.8 project that uses the following dependencies:
