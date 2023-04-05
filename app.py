@@ -209,7 +209,7 @@ if session.logged_in:
         selected_pet = st.selectbox("Select a Pet", pet_names, on_change=clear_chat)
 
         # get the pet name to display; instead of token ID
-        token_id = pet_names[selected_pet]
+        token_id = pet_names[selected_pet] if selected_pet else None
 
         # load the selected NFT pet
         if token_id is not None:
