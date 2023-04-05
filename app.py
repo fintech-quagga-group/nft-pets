@@ -182,7 +182,7 @@ if session.logged_in:
         token_uri = contract.functions.tokenURI(token_id).call()
         st.image(token_uri)
 
-    def get_chatgpt_response(text):
+    def get_chatgpt_response(text, pet_name):
         response = openai.ChatCompletion.create(
             model='gpt-3.5-turbo',
             messages=[
@@ -192,12 +192,12 @@ if session.logged_in:
         )
 
         message = response.choices[0]['message']
-        return f'{message["role"]}: {message["content"]}'
+        return f'{pet_name}: {message["content"]}'
 
     text = st.text_input('Chat with your NFT pet!')
     if text:
         session.chat_history.append({"role": "user", "content": text})
-        response = get_chatgpt_response(text)
+        response = get_chatgpt_response(text, contract.functions.getPet(token_id).call()[0])
         session.chat_history.append({"role": "system", "content": response})
 
     output_container = st.container()
