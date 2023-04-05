@@ -176,7 +176,7 @@ if session.logged_in:
         session.chat_history = []
         output_container.empty()
 
-    token_id = st.selectbox("Select a Pet", list(range(tokens)), on_change=clear_chat)
+    token_id = st.selectbox("Select a Pet", contract.functions.getOwnedPets(session.username).call(), on_change=clear_chat)
 
     if token_id is not None:
         token_uri = contract.functions.tokenURI(token_id).call()
