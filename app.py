@@ -169,7 +169,12 @@ if session.logged_in:
 
     tokens = contract.functions.balanceOf(session.username).call()
 
-    token_id = st.selectbox("Select a Pet", list(range(tokens)))
+    def clear_chat():
+        # Clear the container
+        session.chat_history = []
+        output_container.empty()
+
+    token_id = st.selectbox("Select a Pet", list(range(tokens)), on_change=clear_chat)
 
     if token_id is not None:
         token_uri = contract.functions.tokenURI(token_id).call()
