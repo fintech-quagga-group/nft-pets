@@ -126,8 +126,17 @@ login_form()
 ################################################################################
 session = st.session_state
 
-if session.logged_in:
+# define chat_history to clear chatgpt history on login/logout
+if not "chat_history" in session:
+    session.chat_history = []
 
+def clear_chat():
+    """Helper function to clear the openai chat history for chatgpt call"""
+
+    session.chat_history = []
+    output_container.empty()
+
+if session.logged_in:
     register_tab, chat_tab, your_pets_tab, marketplace_tab = st.tabs(["Register New Pet", "Chat", "Your Pets", "Marketplace"])
 
     with register_tab:
@@ -191,14 +200,6 @@ if session.logged_in:
         # session variables to reset chat history if user selects a new pet
         if not "displayed_pet" in session:
             session.displayed_pet = None
-        if not "chat_history" in session:
-            session.chat_history = []
-
-        def clear_chat():
-            """Helper function to clear the openai chat history for chatgpt call"""
-
-            session.chat_history = []
-            output_container.empty()
 
         # display a selectbox for all of the currently logged in user's pets
         token_id = st.selectbox("Select a Pet", contract.functions.getOwnedPets(session.username).call(), on_change=clear_chat)
@@ -294,6 +295,8 @@ if session.logged_in:
                     elif 'You already own this token' in error:
                         st.write('You alread own this pet!')
 else:
+    session.chat_history = []
+
     # when the user is not logged in, direct them to use the sidebar and login
     st.markdown("# :arrow_left:")
     st.title('Please use the sidebar to login with a connected Ethereum address.')
