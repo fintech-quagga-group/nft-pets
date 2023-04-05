@@ -31,12 +31,13 @@ Kaggle handles all code dependencies and we do not advise trying to run our note
 
 The following dependencies are used: 
 1. [Pandas](https://github.com/pandas-dev/pandas) (1.3.5) - Data analysis
-2. [Streamlit](https://streamlit.io/)
-3. [Ganache](https://trufflesuite.com/ganache/)
-4. [Solidarity](https://soliditylang.org/)
-5. [Remix](https://remix-project.org/)
-6. [ChatGTP](https://openai.com/blog/chatgpt)
-7. [DALL-E](https://labs.openai.com/)
+2. [Streamlit](https://streamlit.io/) (1.2.0) - Web app interface
+3. [Ganache](https://trufflesuite.com/ganache/) (2.7.0) - Ethereum blockchain
+4. [Solidarity](https://soliditylang.org/) (0.8.19) - Language for smart contract
+5. [Remix](https://remix-project.org/) - IDE for Web3 developement
+6. [ChatGTP](https://openai.com/blog/chatgpt) (3.5) - Chat features
+7. [DALL-E](https://labs.openai.com/) - Image creation
+8. [Metamask](https://metamask.io/) (10.28.1) - Blockchain Wallet
 ---
 
 ## Usage
