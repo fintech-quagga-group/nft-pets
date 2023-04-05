@@ -20,9 +20,6 @@
 Optional
 7. Add Pokemon-like game features (edited) 
 
-### Data Collection 
-
-
 ---
 
 ## Technologies
@@ -33,9 +30,9 @@ This is a Python 3.8 project that uses the following dependencies:
 2. [Ganache](https://trufflesuite.com/ganache/) (2.7.0) - Ethereum blockchain
 3. [Solidity](https://soliditylang.org/) (0.8.19) - Language for smart contract
 4. [Remix](https://remix-project.org/) - IDE for Web3 developement
-5. [ChatGTP](https://openai.com/blog/chatgpt) (3.5) - Chat features
-6. [DALL-E](https://labs.openai.com/) - Image creation
-7. [MetaMask](https://MetaMask.io/) (10.28.1) - Blockchain Wallet
+5. [OpenAI](https://platform.openai.com/docs/api-reference) (0.27.2) - DALL-E and ChatGPT integration
+6. [MetaMask](https://MetaMask.io/) (10.28.1) - Blockchain Wallet
+
 ---
 
 ## Installation
