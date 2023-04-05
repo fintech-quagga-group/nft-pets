@@ -275,8 +275,13 @@ if session.logged_in:
             try: 
                 contract.functions.buyPet(pet).transact({'from': session.username, 'value': int(pet_info[2]), 'gas': 1000000})
                 st.experimental_rerun()
-            except ValueError: 
-                st.write('You already own this pet!')
+            except ValueError as e:
+                error = str(e)
+
+                if 'insufficient funds' in error:
+                    st.write('You have insufficient funds to buy this pet.')
+                elif 'You already own this token' in error:
+                    st.write('You alread own this pet!')
 else:
     # when the user is not logged in, direct them to use the sidebar and login
     st.markdown("# :arrow_left:")
