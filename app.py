@@ -103,7 +103,7 @@ def login_form():
     # display login form to accept public address
     if not session.logged_in:
         if not session.form_hidden:
-            session.username = st.sidebar.text_input('Account ID', value=session.username)
+            session.username = st.sidebar.text_input('Account Address', value=session.username)
             session.password = st.sidebar.text_input('Private Key', type='password')
         if st.sidebar.button('Login', key='login', on_click=login):
             # call the login function to verify that the address is accurate to the stored private key
