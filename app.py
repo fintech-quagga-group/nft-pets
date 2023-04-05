@@ -262,6 +262,8 @@ if session.logged_in:
     for pet in owned_pets:
         st.image(contract.functions.tokenURI(pet).call())
 
+    st.markdown("---")
+
     ################################################################################
     # View all pets currently available for sale
     ################################################################################
