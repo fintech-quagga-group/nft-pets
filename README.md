@@ -40,7 +40,22 @@ This is a Python 3.8 project that uses the following dependencies:
 
 ## Installation
 
+This project is ran using a [conda dev environment](https://www.anaconda.com/products/distribution). 
 
+Assuming you have Python installed you should be able to install the required dependencies using the following commands: 
+
+```
+pip install web3==5.17
+pip install streamlit
+pip install openai
+pip install python-dotenv
+```
+
+However, if you have conda set up you can directly copy the environment that we used to create this project with [requirements.txt](./Resources/requirements.txt):
+
+Create a copy of the conda dev environment with `conda create --name myenv --file ./Resources/requirements.txt`
+
+Then install the requirements with `conda install --name myenv --file ./Resources/requirements.txt`
 
 ---
 
@@ -113,6 +128,8 @@ To run our app, you will need to create a local blockchain using Ganache and dep
     ```
 
 14. With Ganache open on your newly created workspace, your smart contract deployed on Remix, and your .env file setup with your secret keys, you are ready to run the app. In VSCode or your terminal you can run the app using the command `streamlit run app.py`
+
+---
 
 ### Other Files 
 
