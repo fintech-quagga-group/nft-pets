@@ -169,7 +169,12 @@ if session.logged_in:
 
     tokens = contract.functions.balanceOf(session.username).call()
 
-    token_id = st.selectbox("Select a Pet", list(range(tokens)))
+    def clear_chat():
+        # Clear the container
+        session.chat_history = []
+        output_container.empty()
+
+    token_id = st.selectbox("Select a Pet", list(range(tokens)), on_change=clear_chat)
 
     if token_id is not None:
         token_uri = contract.functions.tokenURI(token_id).call()
@@ -187,8 +192,22 @@ if session.logged_in:
         message = response.choices[0]['message']
         return f'{message["role"]}: {message["content"]}'
 
+    if not "chat_history" in session:
+        session.chat_history = []
+
     text = st.text_input('Chat with your NFT pet!')
-    #st.write(get_chatgpt_response(text))
+    if text:
+        session.chat_history.append({"role": "user", "content": text})
+        response = get_chatgpt_response(text)
+        session.chat_history.append({"role": "system", "content": response})
+
+    # Create a container
+    output_container = st.container()
+
+    # Inside the container, use st.write() to display the messages
+    with output_container:
+        for message in session.chat_history:
+            st.write(f'{message["role"]}: {message["content"]}')
 
     st.markdown("---")
 
