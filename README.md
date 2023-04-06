@@ -41,6 +41,8 @@ You can also go to the marketplace tab and see all of the NFT pets that have bee
 
 ![Using the UI to buy the NFT cat created in the previous example and seeing it appear in the "Your Pets" tab](./Resources/Gifs/buy_pet.gif)
 
+You can view a full demo of the app and all of its parts here: [https://drive.google.com/file/d/134XnTJSfL4J4uqfgMZ2tgZlurfHeP2xv/view?usp=sharing](https://drive.google.com/file/d/134XnTJSfL4J4uqfgMZ2tgZlurfHeP2xv/view?usp=sharing)
+
 ---
 
 ## Technologies
