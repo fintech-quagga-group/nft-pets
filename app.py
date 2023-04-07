@@ -300,7 +300,7 @@ if session.logged_in:
                     if 'insufficient funds' in error:
                         st.write('You have insufficient funds to buy this pet.')
                     elif 'You already own this token' in error:
-                        st.write('You alread own this pet!')
+                        st.write('You already own this pet!')
 else:
     session.chat_history = []
 
