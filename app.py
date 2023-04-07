@@ -10,6 +10,7 @@ import streamlit as st
 
 env = dotenv_values()
 
+# init web provider and openai keys
 w3 = Web3(Web3.HTTPProvider(env["WEB3_PROVIDER_URI"]))
 openai.api_key = env["OPENAI_API_KEY"]
 
@@ -44,7 +45,7 @@ def login_form():
     session = st.session_state
     if not "logged_in" in session:
         session.logged_in = False
-    if not "form_hidden" in session:
+    if not "form_hidden" in session:         # hide main UI if not logged in 
         session.form_hidden = False
     if not "username" in session:
         session.username = ""
@@ -136,7 +137,9 @@ def clear_chat():
     session.chat_history = []
     output_container.empty()
 
+# have a conditional to hide/show the main UI if the user is not logged in
 if session.logged_in:
+    # split each main functionality into it's own streamlit tab
     register_tab, chat_tab, your_pets_tab, marketplace_tab = st.tabs(["Register New Pet", "Chat", "Your Pets", "Marketplace"])
 
     with register_tab:
@@ -266,8 +269,10 @@ if session.logged_in:
         ################################################################################
         st.markdown('## Your NFT Pets')
 
+        # use contract function to return all token IDs for the pets that the current user owns
         owned_pets = contract.functions.getOwnedPets(session.username).call()
 
+        # for each token ID get the NFT image
         for pet in owned_pets:
             st.image(contract.functions.tokenURI(pet).call())
 
@@ -277,8 +282,10 @@ if session.logged_in:
         ################################################################################
         st.markdown('## NFT Pet Marketplace')
 
+        # use the smart contract function to get all the token IDs for all of the pets listed on the marketplace
         pets_for_sale = contract.functions.getPetsForSale().call()
 
+        # for each pet list the image, basic info, and button to purchase the pet 
         for pet in pets_for_sale:
             pet_info = contract.functions.getPet(pet).call()
 

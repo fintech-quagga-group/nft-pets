@@ -153,6 +153,7 @@ To run our app, you will need to create a local blockchain using Ganache and dep
 
 ### Other Files 
 
+Presentation slides found [here](./Resources/Presentation_Slides/).
 
 ---
 
